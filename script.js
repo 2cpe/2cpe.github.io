@@ -302,19 +302,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update the preventScreenCapture function
     function preventScreenCapture() {
-        let blurTimeout;
-        
-        // Function to handle blur effect
-        function handleBlur() {
-            const qrCode = document.querySelector('.qr-code');
-            if (qrCode) {
-                qrCode.style.filter = 'blur(10px)';
-                // Remove blur after 2 seconds
-                clearTimeout(blurTimeout);
-                blurTimeout = setTimeout(() => {
-                    qrCode.style.filter = 'none';
-                }, 2000);
-            }
+        // Add warning element to body
+        const warningElement = document.createElement('div');
+        warningElement.className = 'screenshot-warning';
+        warningElement.innerHTML = '<div class="warning-text">Screenshot Detected!</div>';
+        document.body.appendChild(warningElement);
+
+        // Function to show warning
+        function showWarning() {
+            warningElement.classList.add('active');
+            setTimeout(() => {
+                warningElement.classList.remove('active');
+            }, 1000); // Warning shows for 1 second
         }
 
         // Detect screenshot attempts
@@ -326,26 +325,130 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.key === 'F12'
             ) {
                 e.preventDefault();
-                handleBlur();
+                showWarning();
                 return false;
             }
         });
 
-        // Only trigger on actual visibility change (for screenshot tools)
+        // Show warning on visibility change
         document.addEventListener('visibilitychange', function() {
             if (document.hidden) {
-                handleBlur();
+                showWarning();
             }
+        });
+
+        // Show warning on blur
+        window.addEventListener('blur', function() {
+            showWarning();
         });
 
         // Prevent right-click
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
-            handleBlur();
+            showWarning();
             return false;
         });
     }
 
     // Call prevention function
     preventScreenCapture();
+
+    // Add this to your existing script.js
+    function enhancedScreenshotPrevention() {
+        // Create secure video element as screenshot detector
+        const secureVideo = document.createElement('video');
+        secureVideo.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0.01;';
+        secureVideo.playsInline = true;
+        secureVideo.autoplay = true;
+        secureVideo.muted = true;
+        
+        // Add protected content class
+        document.querySelector('.invitation-card').classList.add('protected-content');
+
+        // Enhanced screenshot detection
+        const detectScreenshot = () => {
+            const protectedContent = document.querySelector('.protected-content');
+            protectedContent.classList.add('screenshot-protected');
+            
+            // Show warning
+            const warningElement = document.createElement('div');
+            warningElement.className = 'screenshot-warning active';
+            warningElement.innerHTML = `
+                <div class="warning-content">
+                    <div class="warning-icon">🚫</div>
+                    <div class="warning-text">Screenshot Blocked</div>
+                    <div class="warning-subtext">For security reasons, screenshots are not allowed.</div>
+                </div>
+            `;
+            document.body.appendChild(warningElement);
+
+            // Remove warning after delay
+            setTimeout(() => {
+                warningElement.remove();
+                protectedContent.classList.remove('screenshot-protected');
+            }, 2000);
+        };
+
+        // Multiple detection methods
+        const preventMethods = {
+            // iOS detection
+            ios: () => {
+                window.addEventListener('focusout', detectScreenshot);
+                window.addEventListener('resize', detectScreenshot);
+            },
+            
+            // Android detection
+            android: () => {
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.setActionHandler('previoustrack', detectScreenshot);
+                    navigator.mediaSession.setActionHandler('nexttrack', detectScreenshot);
+                }
+            },
+            
+            // Desktop detection
+            desktop: () => {
+                document.addEventListener('keydown', (e) => {
+                    if (
+                        (e.key === 'PrintScreen') ||
+                        (e.ctrlKey && (e.key === 'p' || e.key === 'P')) ||
+                        (e.metaKey && (e.key === 'p' || e.key === 'P')) ||
+                        (e.ctrlKey && e.shiftKey && (e.key === 'i' || e.key === 'I')) ||
+                        (e.ctrlKey && e.shiftKey && (e.key === 'c' || e.key === 'C')) ||
+                        e.key === 'F12'
+                    ) {
+                        e.preventDefault();
+                        detectScreenshot();
+                    }
+                });
+            }
+        };
+
+        // Apply all prevention methods
+        Object.values(preventMethods).forEach(method => method());
+
+        // Additional protection layers
+        document.addEventListener('contextmenu', e => {
+            e.preventDefault();
+            detectScreenshot();
+        });
+
+        // Detect developer tools
+        let devToolsTimeout;
+        const detectDevTools = () => {
+            const widthThreshold = window.outerWidth - window.innerWidth > 160;
+            const heightThreshold = window.outerHeight - window.innerHeight > 160;
+            
+            if (widthThreshold || heightThreshold) {
+                detectScreenshot();
+            }
+        };
+
+        window.addEventListener('resize', () => {
+            clearTimeout(devToolsTimeout);
+            devToolsTimeout = setTimeout(detectDevTools, 100);
+        });
+    }
+
+    // Call the enhanced prevention
+    enhancedScreenshotPrevention();
 }); 

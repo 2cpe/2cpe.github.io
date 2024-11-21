@@ -176,7 +176,6 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: filter 0.3s ease;
 }
 
 .qr-code img {
@@ -546,4 +545,82 @@ img, .qr-code {
     0% { transform: scale(0.8); opacity: 0; }
     50% { transform: scale(1.1); opacity: 1; }
     100% { transform: scale(1); opacity: 1; }
+}
+
+/* Add these new styles to your existing CSS */
+.protected-content {
+    position: relative;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.screenshot-protected {
+    filter: blur(20px);
+    transition: filter 0.3s ease;
+}
+
+.screenshot-warning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.warning-content {
+    text-align: center;
+    color: white;
+    padding: 30px;
+}
+
+.warning-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.warning-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.warning-subtext {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Additional protection */
+.protected-content * {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -khtml-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+@media print {
+    .protected-content {
+        display: none !important;
+    }
+    body::after {
+        content: "Printing is not allowed";
+        display: block;
+        text-align: center;
+        padding: 50px;
+        font-size: 24px;
+    }
 } 
