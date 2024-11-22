@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add to global scope for onclick handlers
-    window.showSection = function(sectionId) {
+    window.showSection = async function(sectionId) {
         // Hide all sections
         loginForm.style.display = 'none';
         mainMenu.style.display = 'none';
@@ -66,9 +66,21 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutBtn.style.display = 'block';
 
         if (sectionId === 'scannerSection') {
+            const hasPermission = await checkCameraPermission();
+            if (!hasPermission) {
+                const scanResult = document.getElementById('scanResult');
+                scanResult.innerHTML = `
+                    <div class="error-scan">
+                        <h3>يرجى السماح بالوصول للكاميرا</h3>
+                        <p>هذه الميزة تتطلب الوصول للكاميرا للعمل</p>
+                        <button onclick="initializeScanner()" class="admin-btn" style="margin-top: 15px;">
+                            محاولة مرة أخرى
+                        </button>
+                    </div>
+                `;
+            }
             initializeScanner();
         } else if (sectionId === 'deviceListSection') {
-            // Show only the first tab when entering device list section
             showTab('created');
             updateDeviceList();
         }
@@ -78,15 +90,56 @@ document.addEventListener('DOMContentLoaded', function() {
         if (html5QrcodeScanner) {
             html5QrcodeScanner.clear();
         }
-        html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader", 
-            { 
-                fps: 10,
-                qrbox: {width: 250, height: 250},
-                aspectRatio: 1.0
+
+        const scanResult = document.getElementById('scanResult');
+        scanResult.innerHTML = ''; // Clear previous results
+
+        try {
+            html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", 
+                { 
+                    fps: 10,
+                    qrbox: {width: 250, height: 250},
+                    aspectRatio: 1.0,
+                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
+                    showTorchButtonIfSupported: true,
+                    showZoomSliderIfSupported: true
+                }
+            );
+
+            html5QrcodeScanner.render(
+                (decodedText, decodedResult) => {
+                    onScanSuccess(decodedText, decodedResult);
+                }, 
+                (errorMessage) => {
+                    onScanFailure(errorMessage);
+                }
+            );
+        } catch (err) {
+            // Handle initialization errors
+            if (err.name === 'NotAllowedError') {
+                scanResult.innerHTML = `
+                    <div class="error-scan">
+                        <h3>لم يتم السماح بالوصول للكاميرا</h3>
+                        <p>يرجى السماح بالوصول للكاميرا من إعدادات المتصفح ثم إعادة المحاولة</p>
+                        <button onclick="initializeScanner()" class="admin-btn" style="margin-top: 15px;">
+                            إعادة المحاولة
+                        </button>
+                    </div>
+                `;
+            } else {
+                scanResult.innerHTML = `
+                    <div class="error-scan">
+                        <h3>حدث خطأ</h3>
+                        <p>${err.message}</p>
+                        <button onclick="initializeScanner()" class="admin-btn" style="margin-top: 15px;">
+                            إعادة المحاولة
+                        </button>
+                    </div>
+                `;
             }
-        );
-        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            console.error('Scanner initialization failed:', err);
+        }
     }
 
     function onScanSuccess(decodedText, decodedResult) {
@@ -368,7 +421,16 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function onScanFailure(error) {
-        console.warn(`QR error = ${error}`);
+        // Only show errors that aren't related to normal scanning process
+        if (error && !error.includes("No QR code found")) {
+            const scanResult = document.getElementById('scanResult');
+            scanResult.innerHTML = `
+                <div class="error-scan">
+                    <h3>خطأ في المسح</h3>
+                    <p>${error}</p>
+                </div>
+            `;
+        }
     }
 
     // Add auto-refresh every 30 seconds when device list section is visible
@@ -446,4 +508,16 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update device list when switching tabs
         updateDeviceList();
     };
+
+    // Add a function to check camera permissions
+    async function checkCameraPermission() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            // Stop the stream immediately after checking
+            stream.getTracks().forEach(track => track.stop());
+            return true;
+        } catch (err) {
+            return false;
+        }
+    }
 }); 

@@ -188,7 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const arabicText = document.querySelector('.arabic-text');
         const groom = document.querySelector('.groom');
         const bride = document.querySelector('.bride');
-        const mapButton = document.querySelector('.map-button-container');
         
         if (locationSection) locationSection.style.display = 'none';
         if (footerText) footerText.style.display = 'none';
@@ -197,7 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (arabicText) arabicText.style.display = 'none';
         if (groom) groom.style.display = 'none';
         if (bride) bride.style.display = 'none';
-        if (mapButton) mapButton.style.display = 'none';
         
         // Hide the attendance button
         const showAttendanceBtn = document.querySelector('.show-attendance-btn');
