@@ -1,4 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Update the attendance button click handler
+    const showAttendanceBtn = document.querySelector('.show-attendance-btn');
+    const attendanceBox = document.querySelector('.attendance-box');
+    const attendanceOverlay = document.querySelector('.attendance-box-overlay');
+
+    showAttendanceBtn.addEventListener('click', function() {
+        attendanceBox.style.display = 'block';
+        attendanceOverlay.style.display = 'block';
+    });
+
+    // Close attendance box when clicking outside
+    attendanceOverlay.addEventListener('click', function() {
+        attendanceBox.style.display = 'none';
+        attendanceOverlay.style.display = 'none';
+    });
+
     // Check if QR Code library is loaded
     if (typeof QRCode === 'undefined') {
         console.error('QR Code library not loaded!');
@@ -49,7 +65,26 @@ document.addEventListener('DOMContentLoaded', function() {
     // Show QR code
     function showQRCode(name) {
         const qrcodeContainer = document.getElementById('qrcode');
-        const mapsUrl = `https://maps.app.goo.gl/mh4weC8nMm2AR54f9?guest=${encodeURIComponent(name)}`;
+        
+        // Check if this user already has a QR code
+        const existingQRCodes = JSON.parse(localStorage.getItem('qr_data_list') || '[]');
+        const deviceId = generateDeviceId();
+        const existingQR = existingQRCodes.find(qr => qr.deviceId === deviceId);
+        
+        // Store the name without encoding in qrData
+        const qrData = existingQR || {
+            guest: name,
+            deviceId: deviceId,
+            code: Math.floor(100000 + Math.random() * 900000),
+            mapUrl: 'https://maps.app.goo.gl/J5SzdTuTRQyKbP5c6',
+            timestamp: new Date().toISOString()
+        };
+        
+        // Only store new QR data if it doesn't exist
+        if (!existingQR) {
+            existingQRCodes.push(qrData);
+            localStorage.setItem('qr_data_list', JSON.stringify(existingQRCodes));
+        }
         
         qrcodeContainer.innerHTML = '';
         qrcodeContainer.style.display = 'block';
@@ -59,10 +94,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const namesSection = document.querySelector('.names-section');
             const arabicText = document.querySelector('.arabic-text');
             const footerText = document.querySelector('.footer-text');
+            const showAttendanceBtn = document.querySelector('.show-attendance-btn');
             
             if (namesSection) namesSection.style.display = 'none';
             if (arabicText) arabicText.style.display = 'none';
             if (footerText) footerText.style.display = 'none';
+            if (showAttendanceBtn) showAttendanceBtn.style.display = 'none';
 
             // Create and show welcome box
             const overlay = document.createElement('div');
@@ -72,8 +109,8 @@ document.addEventListener('DOMContentLoaded', function() {
             welcomeBox.className = 'welcome-box';
             welcomeBox.innerHTML = `
                 <span class="emoji">🎉</span>
-                <h3>مرحباً بك، ${name}</h3>
-                <p>رمز QR الخاص بموقع المناسبة جاهز</p>
+                <h3>مرحباً بك، ${qrData.guest}</h3>
+                <p>رمز QR الخاص بك جاهز</p>
                 <button class="welcome-box-button">حسناً</button>
             `;
             
@@ -94,8 +131,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 qrDiv.className = 'qr-code';
                 wrapper.appendChild(qrDiv);
 
+                // Create QR code data with only device ID and code
+                const qrCodeData = {
+                    d: qrData.deviceId,
+                    c: qrData.code
+                };
+
                 new QRCode(qrDiv, {
-                    text: mapsUrl,
+                    text: JSON.stringify(qrCodeData),
                     width: 240,
                     height: 240,
                     colorDark: "#2c3e50",
@@ -104,10 +147,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     margin: 2
                 });
 
-                const nameOverlay = document.createElement('div');
-                nameOverlay.className = 'name-overlay';
-                nameOverlay.innerHTML = `<span>${name}</span>`;
-                wrapper.appendChild(nameOverlay);
+                const codeOverlay = document.createElement('div');
+                codeOverlay.className = 'name-overlay';
+                codeOverlay.innerHTML = `${qrData.code}`;
+                wrapper.appendChild(codeOverlay);
                 
                 const borderAnimation = document.createElement('div');
                 borderAnimation.className = 'border-animation';
@@ -117,16 +160,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 wrapper.appendChild(borderAnimation);
                 
                 qrcodeContainer.appendChild(wrapper);
-
-                // Show location button
-                const locationSection = document.querySelector('.location-section');
-                if (locationSection) {
-                    locationSection.style.display = 'block';
-                    const locationBtn = locationSection.querySelector('.location-btn');
-                    if (locationBtn) {
-                        locationBtn.onclick = () => window.open(mapsUrl, '_blank');
-                    }
-                }
             });
 
         } catch (error) {
@@ -147,23 +180,71 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
+        // Hide additional sections
         const locationSection = document.querySelector('.location-section');
-        if (locationSection) {
-            locationSection.style.display = 'none';
-        }
-
         const footerText = document.querySelector('.footer-text');
-        if (footerText) {
-            footerText.style.display = 'none';
+        const dateSection = document.querySelector('.date-section');
+        const namesSection = document.querySelector('.names-section');
+        const arabicText = document.querySelector('.arabic-text');
+        const groom = document.querySelector('.groom');
+        const bride = document.querySelector('.bride');
+        const mapButton = document.querySelector('.map-button-container');
+        
+        if (locationSection) locationSection.style.display = 'none';
+        if (footerText) footerText.style.display = 'none';
+        if (dateSection) dateSection.style.display = 'none';
+        if (namesSection) namesSection.style.display = 'none';
+        if (arabicText) arabicText.style.display = 'none';
+        if (groom) groom.style.display = 'none';
+        if (bride) bride.style.display = 'none';
+        if (mapButton) mapButton.style.display = 'none';
+        
+        // Hide the attendance button
+        const showAttendanceBtn = document.querySelector('.show-attendance-btn');
+        if (showAttendanceBtn) {
+            showAttendanceBtn.style.display = 'none';
         }
+    }
+
+    // Add this function near the top of your script
+    function showErrorAlert(message) {
+        const errorAlert = document.querySelector('.error-alert');
+        const errorOverlay = document.querySelector('.error-alert-overlay');
+        const errorButton = document.querySelector('.error-alert-button');
+        
+        // Update message if provided
+        if (message) {
+            errorAlert.querySelector('h3').textContent = message;
+        }
+        
+        errorAlert.style.display = 'block';
+        errorOverlay.style.display = 'block';
+        
+        // Close alert when button is clicked
+        errorButton.onclick = () => {
+            errorAlert.style.display = 'none';
+            errorOverlay.style.display = 'none';
+        };
+        
+        // Close alert when clicking outside
+        errorOverlay.onclick = () => {
+            errorAlert.style.display = 'none';
+            errorOverlay.style.display = 'none';
+        };
     }
 
     // Handle attendance
     function handleAttendance(name, isAttending) {
         if (!name.trim()) {
-            alert('Please enter your name');
+            showErrorAlert('الرجاء إدخال اسمك');
             return;
         }
+
+        // Hide the attendance box and overlay
+        const attendanceBox = document.querySelector('.attendance-box');
+        const attendanceOverlay = document.querySelector('.attendance-box-overlay');
+        if (attendanceBox) attendanceBox.style.display = 'none';
+        if (attendanceOverlay) attendanceOverlay.style.display = 'none';
 
         const response = {
             name: name,
@@ -171,7 +252,15 @@ document.addEventListener('DOMContentLoaded', function() {
             deviceId: generateDeviceId(),
             timestamp: new Date().toISOString()
         };
+
+        // Store individual response
         localStorage.setItem('wedding_response', JSON.stringify(response));
+
+        // Store in responses array
+        let responses = JSON.parse(localStorage.getItem('wedding_responses') || '[]');
+        responses = responses.filter(r => r.deviceId !== response.deviceId); // Remove existing if any
+        responses.push(response);
+        localStorage.setItem('wedding_responses', JSON.stringify(responses));
 
         if (isAttending) {
             showQRCode(name);
@@ -226,31 +315,14 @@ document.addEventListener('DOMContentLoaded', function() {
         handleAttendance(name, false);
     });
 
-    // Reset Button
-    const resetButton = document.getElementById('resetButton');
-    if (resetButton) {
-        resetButton.addEventListener('click', function() {
-            if (confirm('هل أنت متأكد من إعادة التعيين؟ سيؤدي هذا إلى مسح استجابتك.')) {
-                try {
-                    localStorage.removeItem('wedding_response');
-                    localStorage.removeItem('wedding_invitation_accessed');
-                    document.getElementById('status-message').innerHTML = 'تم إعادة التعيين بنجاح. جاري إعادة التحميل...';
-                    document.getElementById('status-message').className = 'success';
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } catch (error) {
-                    console.error('Reset failed:', error);
-                    document.getElementById('status-message').innerHTML = 'فشلت إعادة التعيين. حاول مرة أخرى.';
-                    document.getElementById('status-message').className = 'error';
-                }
-            }
-        });
-    }
-
     // Initially hide location section
     const locationSection = document.querySelector('.location-section');
     if (locationSection) {
         locationSection.style.display = 'none';
     }
+
+    // Add this to your existing DOMContentLoaded event listener
+    document.querySelector('.settings-btn').addEventListener('click', function() {
+        window.location.href = 'admin.html';
+    });
 }); 
