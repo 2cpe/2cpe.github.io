@@ -14,41 +14,155 @@
         };
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Touch events for iOS
-            document.addEventListener("touchcancel", () => {
+            // Mouse leave event
+            document.addEventListener("mouseleave", () => {
                 document.body.style.filter = "blur(10px)";
-                alert("Page left. Content is hidden.");
+                alert("Mouse has left the page. Content is hidden.");
             });
 
             // Watermark
             const watermark = document.createElement("div");
             watermark.style.position = "fixed";
-            watermark.style.top = "10px"; 
+            watermark.style.top = "10px";
             watermark.style.left = "10px";
             watermark.style.color = "rgba(0, 0, 0, 0.1)";
             watermark.style.fontSize = "24px";
             watermark.style.zIndex = "1000";
             watermark.style.pointerEvents = "none";
-            watermark.style.webkitUserSelect = "none"; // iOS text selection prevention
             watermark.innerText = `Watermark: ${new Date().toLocaleString()}`;
             document.body.appendChild(watermark);
 
-            // iOS Safari developer tools detection
-            if (window.navigator.standalone) {
-                console.log("Running in full-screen mode");
-            }
-            
-            // Prevent Safari debug console
-            function detectDevTools() {
-                if (window.outerHeight - window.innerHeight > 200) {
+            // Developer tools detection
+            const element = new Image();
+            Object.defineProperty(element, 'id', {
+                get: function() {
                     alert("Developer tools are not allowed.");
                     document.body.innerHTML = "";
                 }
+            });
+            console.log(element);
+
+            // iOS Screen Recording & Screenshot Detection
+            let hidden, visibilityChange;
+            if (typeof document.hidden !== "undefined") {
+                hidden = "hidden";
+                visibilityChange = "visibilitychange";
             }
-            window.addEventListener('resize', detectDevTools);
+
+            // Detect page visibility change (potential screenshot or screen recording)
+            document.addEventListener(visibilityChange, function() {
+                if (document.hidden) {
+                    document.body.style.filter = "blur(20px)";
+                    alert("Content protection activated!");
+                } else {
+                    document.body.style.filter = "none";
+                }
+            }, false);
+
+            // iOS specific detection
+            window.addEventListener('focusout', function() {
+                // This triggers when control center is opened (potential screen recording)
+                document.body.style.filter = "blur(20px)";
+                alert("Screen recording detection activated!");
+            });
+
+            window.addEventListener('focusin', function() {
+                document.body.style.filter = "none";
+            });
+
+            // Detect screenshot attempt using gesture events
+            let touchStartTime = 0;
+            let touchEndTime = 0;
+
+            document.addEventListener('touchstart', function(e) {
+                if (e.touches.length > 1) {
+                    touchStartTime = new Date().getTime();
+                }
+            });
+
+            document.addEventListener('touchend', function() {
+                touchEndTime = new Date().getTime();
+                if (touchEndTime - touchStartTime < 100) {
+                    // Potential screenshot gesture detected
+                    document.body.style.filter = "blur(20px)";
+                    alert("Screenshot attempt detected!");
+                    setTimeout(() => {
+                        document.body.style.filter = "none";
+                    }, 1000);
+                }
+            });
+
+            // Additional protection
+            const preventActions = function(e) {
+                e.preventDefault();
+                alert("This action is not allowed!");
+            };
+
+            // Prevent context menu
+            document.addEventListener('contextmenu', preventActions);
+
+            // Prevent selection
+            document.addEventListener('selectstart', preventActions);
+
+            // Prevent touch gestures
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            // Add visual watermark with timestamp
+            function updateWatermark() {
+                const watermark = document.querySelector('.watermark') || document.createElement("div");
+                watermark.className = 'watermark';
+                watermark.style.position = "fixed";
+                watermark.style.top = "50%";
+                watermark.style.left = "50%";
+                watermark.style.transform = "translate(-50%, -50%) rotate(-45deg)";
+                watermark.style.color = "rgba(0, 0, 0, 0.1)";
+                watermark.style.fontSize = "20px";
+                watermark.style.whiteSpace = "nowrap";
+                watermark.style.pointerEvents = "none";
+                watermark.style.zIndex = "9999";
+                watermark.style.userSelect = "none";
+                watermark.innerText = `Protected Content - ${new Date().toLocaleString()}`;
+                document.body.appendChild(watermark);
+            }
+
+            // Update watermark every second
+            setInterval(updateWatermark, 1000);
         });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        /* Add these styles to prevent screenshots */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .protected-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        @media screen and (min-width: 0\0) {
+            /* IE9+ CSS */
+            body {
+                background-attachment: fixed;
+            }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            /* iOS-specific styles */
+            body {
+                -webkit-touch-callout: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <noscript>
