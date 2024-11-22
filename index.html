@@ -12,66 +12,41 @@
             console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
             return false;
         };
-        // Detect screenshots and screen recording for iOS
-        const screenshotDetector = {
-            init() {
-                // Only proceed if device is iOS
-                if (!navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-                    return;
-                }
 
-                // iOS screenshot detection (Command + Shift + 3 or 4)
-                window.addEventListener('keydown', (e) => {
-                    if ((e.metaKey && e.shiftKey) && (e.key === '3' || e.key === '4')) {
-                        e.preventDefault();
-                        this.handleViolation('Screenshot attempt detected');
-                    }
-                });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Touch events for iOS
+            document.addEventListener("touchcancel", () => {
+                document.body.style.filter = "blur(10px)";
+                alert("Page left. Content is hidden.");
+            });
 
-                // Detect iOS screen recording using Screen Capture API
-                if ('getDisplayMedia' in navigator.mediaDevices) {
-                    navigator.mediaDevices.getDisplayMedia({video: true}).then(() => {
-                        this.handleViolation('Screen recording detected');
-                    }).catch(() => {
-                        alert("⚠️ Hacker will be hacked you");
-                    });
-                }
-                
-                // Add iOS screenshot gesture detection
-                let startTime = 0;
-                let startY = 0;
-                
-                document.addEventListener('touchstart', (e) => {
-                    if (e.touches.length === 2) {
-                        startTime = Date.now();
-                        startY = e.touches[0].clientY;
-                    }
-                });
+            // Watermark
+            const watermark = document.createElement("div");
+            watermark.style.position = "fixed";
+            watermark.style.top = "10px"; 
+            watermark.style.left = "10px";
+            watermark.style.color = "rgba(0, 0, 0, 0.1)";
+            watermark.style.fontSize = "24px";
+            watermark.style.zIndex = "1000";
+            watermark.style.pointerEvents = "none";
+            watermark.style.webkitUserSelect = "none"; // iOS text selection prevention
+            watermark.innerText = `Watermark: ${new Date().toLocaleString()}`;
+            document.body.appendChild(watermark);
 
-                document.addEventListener('touchend', (e) => {
-                    const endTime = Date.now();
-                    const duration = endTime - startTime;
-                    if (duration < 500 && Math.abs(e.changedTouches[0].clientY - startY) > 50) {
-                        this.handleViolation('Screenshot gesture detected');
-                    }
-                });
-
-                // Detect visibility change for iOS screenshots
-                document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') {
-                        this.handleViolation('Tab switch detected - possible screenshot attempt');
-                    }
-                });
-            },
-
-            handleViolation(message) {
-                alert("⚠️ WARNING: " + message);
-                console.warn('Security violation:', message);
+            // iOS Safari developer tools detection
+            if (window.navigator.standalone) {
+                console.log("Running in full-screen mode");
             }
-        };
-
-        // Initialize screenshot detection
-        screenshotDetector.init();
+            
+            // Prevent Safari debug console
+            function detectDevTools() {
+                if (window.outerHeight - window.innerHeight > 200) {
+                    alert("Developer tools are not allowed.");
+                    document.body.innerHTML = "";
+                }
+            }
+            window.addEventListener('resize', detectDevTools);
+        });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
