@@ -66,80 +66,118 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutBtn.style.display = 'block';
 
         if (sectionId === 'scannerSection') {
-            const hasPermission = await checkCameraPermission();
-            if (!hasPermission) {
-                const scanResult = document.getElementById('scanResult');
-                scanResult.innerHTML = `
-                    <div class="error-scan">
-                        <h3>يرجى السماح بالوصول للكاميرا</h3>
-                        <p>هذه الميزة تتطلب الوصول للكاميرا للعمل</p>
-                        <button onclick="initializeScanner()" class="admin-btn" style="margin-top: 15px;">
-                            محاولة مرة أخرى
-                        </button>
-                    </div>
-                `;
-            }
-            initializeScanner();
+            await initializeCamera();
         } else if (sectionId === 'deviceListSection') {
             showTab('created');
             updateDeviceList();
         }
     };
 
-    function initializeScanner() {
-        if (html5QrcodeScanner) {
-            html5QrcodeScanner.clear();
-        }
-
+    // Add this function to handle camera initialization
+    async function initializeCamera() {
         const scanResult = document.getElementById('scanResult');
-        scanResult.innerHTML = ''; // Clear previous results
-
         try {
+            // First check if getUserMedia is supported
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                throw new Error('كاميرا الويب غير مدعومة في هذا المتصفح');
+            }
+
+            // Request camera permission explicitly first
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "environment" } // Prefer back camera on mobile
+            });
+            
+            // Stop the test stream
+            stream.getTracks().forEach(track => track.stop());
+            
+            // If we got here, we have permission. Now initialize the scanner
+            if (html5QrcodeScanner) {
+                html5QrcodeScanner.clear();
+            }
+
             html5QrcodeScanner = new Html5QrcodeScanner(
-                "reader", 
-                { 
+                "reader",
+                {
                     fps: 10,
-                    qrbox: {width: 250, height: 250},
+                    qrbox: { width: 250, height: 250 },
                     aspectRatio: 1.0,
-                    formatsToSupport: [ Html5QrcodeSupportedFormats.QR_CODE ],
                     showTorchButtonIfSupported: true,
-                    showZoomSliderIfSupported: true
+                    showZoomSliderIfSupported: true,
+                    defaultZoomValueIfSupported: 2,
+                    videoConstraints: {
+                        facingMode: { exact: "environment" }
+                    }
                 }
             );
 
-            html5QrcodeScanner.render(
-                (decodedText, decodedResult) => {
-                    onScanSuccess(decodedText, decodedResult);
-                }, 
-                (errorMessage) => {
-                    onScanFailure(errorMessage);
-                }
-            );
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+
         } catch (err) {
-            // Handle initialization errors
-            if (err.name === 'NotAllowedError') {
-                scanResult.innerHTML = `
+            let errorMessage = '';
+            
+            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                errorMessage = `
                     <div class="error-scan">
-                        <h3>لم يتم السماح بالوصول للكاميرا</h3>
-                        <p>يرجى السماح بالوصول للكاميرا من إعدادات المتصفح ثم إعادة المحاولة</p>
-                        <button onclick="initializeScanner()" class="admin-btn" style="margin-top: 15px;">
+                        <h3>تم رفض الوصول للكاميرا</h3>
+                        <p>يرجى السماح بالوصول للكاميرا من خلال:</p>
+                        <ol style="text-align: right; margin: 10px 20px;">
+                            <li>انقر على أيقونة القفل/الكاميرا في شريط العنوان</li>
+                            <li>اختر "السماح" للوصول إلى الكاميرا</li>
+                            <li>قم بتحديث الصفحة وحاول مرة أخرى</li>
+                        </ol>
+                        <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                            تحديث الصفحة
+                        </button>
+                    </div>
+                `;
+            } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                errorMessage = `
+                    <div class="error-scan">
+                        <h3>لم يتم العثور على كاميرا</h3>
+                        <p>تأكد من توصيل كاميرا بجهازك وأنها تعمل بشكل صحيح</p>
+                    </div>
+                `;
+            } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                errorMessage = `
+                    <div class="error-scan">
+                        <h3>الكاميرا قيد الاستخدام</h3>
+                        <p>يرجى إغلاق أي تطبيقات أخرى تستخدم الكاميرا وإعادة المحاولة</p>
+                        <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
                             إعادة المحاولة
                         </button>
                     </div>
                 `;
             } else {
-                scanResult.innerHTML = `
+                errorMessage = `
                     <div class="error-scan">
-                        <h3>حدث خطأ</h3>
+                        <h3>حدث خطأ غير متوقع</h3>
                         <p>${err.message}</p>
-                        <button onclick="initializeScanner()" class="admin-btn" style="margin-top: 15px;">
+                        <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
                             إعادة المحاولة
                         </button>
                     </div>
                 `;
             }
-            console.error('Scanner initialization failed:', err);
+            
+            scanResult.innerHTML = errorMessage;
+            console.error('Camera initialization failed:', err);
         }
+    }
+
+    // Update the initializeScanner function to use the new camera initialization
+    function initializeScanner() {
+        initializeCamera().catch(err => {
+            const scanResult = document.getElementById('scanResult');
+            scanResult.innerHTML = `
+                <div class="error-scan">
+                    <h3>فشل في تهيئة الماسح الضوئي</h3>
+                    <p>${err.message}</p>
+                    <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                        إعادة المحاولة
+                    </button>
+                </div>
+            `;
+        });
     }
 
     function onScanSuccess(decodedText, decodedResult) {
