@@ -20,7 +20,7 @@
                     return;
                 }
 
-                // iOS screenshot detection (Command + Shift + 3 or 4)
+                // iOS screenshot detection
                 window.addEventListener('keydown', (e) => {
                     if ((e.metaKey && e.shiftKey) && (e.key === '3' || e.key === '4')) {
                         e.preventDefault();
@@ -29,10 +29,12 @@
                 });
 
                 // Detect iOS screen recording
-                if (window.matchMedia('(display-mode: standalone)').matches) {
-                    this.handleViolation('iOS screen recording detected');
+                if ('mediaDevices' in navigator && 'getDisplayMedia' in navigator.mediaDevices) {
+                    navigator.mediaDevices.getDisplayMedia().then(() => {
+                        this.handleViolation('iOS screen recording detected');
+                    }).catch(() => {});
                 }
-                
+
                 // Add iOS screenshot gesture detection
                 let startTime = 0;
                 let startY = 0;
@@ -52,10 +54,14 @@
                     }
                 });
 
-                // Detect visibility change for iOS screenshots
+                // Detect visibility change and screenshot attempt
                 document.addEventListener('visibilitychange', () => {
                     if (document.visibilityState === 'hidden') {
-                        this.handleViolation('Tab switch detected - possible screenshot attempt');
+                        setTimeout(() => {
+                            if (document.visibilityState === 'visible') {
+                                this.handleViolation('Screenshot attempt detected');
+                            }
+                        }, 100);
                     }
                 });
             },
