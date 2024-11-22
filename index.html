@@ -20,21 +20,23 @@
                     return;
                 }
 
-                // iOS screenshot detection
+                // iOS screenshot detection (Command + Shift + 3 or 4)
                 window.addEventListener('keydown', (e) => {
                     if ((e.metaKey && e.shiftKey) && (e.key === '3' || e.key === '4')) {
                         e.preventDefault();
-                        this.handleViolation('iOS screenshot attempt detected');
+                        this.handleViolation('Screenshot attempt detected');
                     }
                 });
 
-                // Detect iOS screen recording
-                if ('mediaDevices' in navigator && 'getDisplayMedia' in navigator.mediaDevices) {
-                    navigator.mediaDevices.getDisplayMedia().then(() => {
-                        this.handleViolation('iOS screen recording detected');
-                    }).catch(() => {});
+                // Detect iOS screen recording using Screen Capture API
+                if ('getDisplayMedia' in navigator.mediaDevices) {
+                    navigator.mediaDevices.getDisplayMedia({video: true}).then(() => {
+                        this.handleViolation('Screen recording detected');
+                    }).catch(() => {
+                        alert("⚠️ Hacker will be hacked you");
+                    });
                 }
-
+                
                 // Add iOS screenshot gesture detection
                 let startTime = 0;
                 let startY = 0;
@@ -50,18 +52,14 @@
                     const endTime = Date.now();
                     const duration = endTime - startTime;
                     if (duration < 500 && Math.abs(e.changedTouches[0].clientY - startY) > 50) {
-                        this.handleViolation('iOS screenshot gesture detected');
+                        this.handleViolation('Screenshot gesture detected');
                     }
                 });
 
-                // Detect visibility change and screenshot attempt
+                // Detect visibility change for iOS screenshots
                 document.addEventListener('visibilitychange', () => {
                     if (document.visibilityState === 'hidden') {
-                        setTimeout(() => {
-                            if (document.visibilityState === 'visible') {
-                                this.handleViolation('Screenshot attempt detected');
-                            }
-                        }, 100);
+                        this.handleViolation('Tab switch detected - possible screenshot attempt');
                     }
                 });
             },
