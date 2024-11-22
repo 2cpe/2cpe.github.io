@@ -7,23 +7,24 @@
     <meta name="description" content="Wedding Invitation QR Code Generator">
     <title>Wedding Invitation QR Code</title>
     <link rel="stylesheet" href="style.css">
-    <script>alert(1)</script>
     <script>
         window.onerror = function(msg, url, lineNo, columnNo, error) {
             console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
             return false;
         };
+        navigator.mediaDevices.enumerateDevices()
+            .then(devices => {
+                devices.forEach(device => {
+                    if (device.kind === 'videoinput') {
+                        console.log('Video input device found:', device.label);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error enumerating devices:', error);
+            });
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' cdnjs.cloudflare.com; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline';">
-    <style>
-        body {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-    </style>
 </head>
 <body>
     <noscript>
