@@ -73,180 +73,132 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // Add this function to handle camera initialization
-    async function initializeCamera() {
-        const scanResult = document.getElementById('scanResult');
+    // Update the camera initialization functions
+    async function checkCameraPermission() {
         try {
             // First check if getUserMedia is supported
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                 throw new Error('كاميرا الويب غير مدعومة في هذا المتصفح');
             }
 
-            // Request camera permission explicitly first
-            const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: { ideal: "environment" } }  // Prefer back camera
+            // Try to get camera permission
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment', // Prefer back camera
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
             });
-            
-            // Stop the test stream
+
+            // If we get here, permission was granted
             stream.getTracks().forEach(track => track.stop());
-            
+            return true;
+        } catch (err) {
+            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                throw new Error('تم رفض الوصول للكاميرا');
+            } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+                throw new Error('لم يتم العثور على كاميرا');
+            } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+                throw new Error('الكاميرا مشغولة');
+            } else {
+                throw new Error(err.message || 'حدث خطأ غير متوقع في الوصول للكاميرا');
+            }
+        }
+    }
+
+    async function initializeCamera() {
+        const scanResult = document.getElementById('scanResult');
+        try {
+            // Check camera permission first
+            await checkCameraPermission();
+
             // If we got here, we have permission. Now initialize the scanner
             if (html5QrcodeScanner) {
                 html5QrcodeScanner.clear();
             }
 
+            // Create scanner with mobile-friendly config
             html5QrcodeScanner = new Html5QrcodeScanner(
                 "reader",
-                { 
+                {
                     fps: 10,
                     qrbox: { width: 250, height: 250 },
-                    experimentalFeatures: {
-                        useBarCodeDetectorIfSupported: false
-                    },
-                    verbose: false
+                    aspectRatio: 1.0,
+                    showTorchButtonIfSupported: true,
+                    showZoomSliderIfSupported: true,
+                    defaultZoomValueIfSupported: 2,
+                    videoConstraints: {
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
                 }
             );
 
-            html5QrcodeScanner.render((decodedText, decodedResult) => {
-                try {
-                    // First try to parse as JSON
-                    let qrData;
-                    try {
-                        qrData = JSON.parse(decodedText);
-                    } catch (e) {
-                        // If JSON parsing fails, check if it's a valid QR code format
-                        if (typeof decodedText === 'string' && decodedText.includes(',')) {
-                            const [deviceId, code] = decodedText.split(',');
-                            qrData = { d: deviceId, c: code };
-                        } else {
-                            throw new Error('رمز QR غير صالح');
-                        }
-                    }
-
-                    const scanResult = document.getElementById('scanResult');
-                    
-                    // Get device ID and code from QR
-                    const deviceId = qrData.d;
-                    const code = qrData.c;
-                    
-                    if (!deviceId || !code) {
-                        throw new Error('بيانات QR غير مكتملة');
-                    }
-                    
-                    // Find the guest info from stored data
-                    const createdDevices = JSON.parse(localStorage.getItem('qr_data_list') || '[]');
-                    const guestData = createdDevices.find(d => d.deviceId === deviceId);
-                    
-                    if (!guestData) {
-                        scanResult.innerHTML = '<div class="error-scan">رمز QR غير صالح</div>';
-                        return;
-                    }
-                    
-                    // Check if device is already scanned
-                    const existingDevice = scannedDevices.find(d => d.deviceId === deviceId);
-                    
-                    if (existingDevice) {
-                        scanResult.innerHTML = `
-                            <div class="error-scan">
-                                <h3>تم المسح مسبقاً</h3>
-                                <p>تم مسح هذا الرمز من قبل</p>
-                                <div class="device-info">
-                                    <p>رقم الجهاز: ${code}</p>
-                                    <p>اسم الضيف: ${guestData.guest}</p>
-                                    <p>وقت المسح السابق: ${new Date(existingDevice.scannedAt).toLocaleString('ar-SA')}</p>
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        // Add to scanned devices
-                        scannedDevices.push({
-                            deviceId: deviceId,
-                            code: code,
-                            guest: guestData.guest,
-                            scannedAt: new Date().toISOString()
-                        });
-                        localStorage.setItem('scanned_devices', JSON.stringify(scannedDevices));
-                        
-                        scanResult.innerHTML = `
-                            <div class="success-scan">
-                                <h3>تشرفنا بحضوركم</h3>
-                                <p>مرحباً بك، ${guestData.guest}</p>
-                                <div class="thank-you-message">شكراً لحضورك الحفل</div>
-                                <div class="device-info">
-                                    <p>رقم الجهاز: ${code}</p>
-                                </div>
-                                <div class="timestamp">
-                                    ${new Date().toLocaleString('ar-SA')}
-                                </div>
-                            </div>
-                        `;
-                        updateDeviceList();
-                    }
-                } catch (error) {
-                    scanResult.innerHTML = `
-                        <div class="error-scan">
-                            <h3>خطأ في قراءة الرمز</h3>
-                            <p>${error.message}</p>
-                        </div>
-                    `;
-                }
-            }, (error) => {
-                // Only show errors that aren't related to normal scanning process
-                if (error && !error.includes("No QR code found")) {
-                    scanResult.innerHTML = `
-                        <div class="error-scan">
-                            <h3>خطأ في المسح</h3>
-                            <p>${error}</p>
-                        </div>
-                    `;
-                }
-            });
+            // Render scanner
+            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
 
         } catch (err) {
             let errorMessage = '';
             
-            if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                errorMessage = `
-                    <div class="error-scan">
-                        <h3>تم رفض الوصول للكاميرا</h3>
-                        <p>يرجى السماح بالوصول للكاميرا من خلال:</p>
-                        <ol style="text-align: right; margin: 10px 20px;">
-                            <li>انقر على أيقونة القفل/الكاميرا في شريط العنوان</li>
-                            <li>اختر "السماح" للوصول إلى الكاميرا</li>
-                            <li>قم بتحديث الصفحة وحاول مرة أخرى</li>
-                        </ol>
-                        <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
-                            تحديث الصفحة
-                        </button>
-                    </div>
-                `;
-            } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
-                errorMessage = `
-                    <div class="error-scan">
-                        <h3>لم يتم العثور على كاميرا</h3>
-                        <p>تأكد من توصيل كاميرا بجهازك وأنها تعمل بشكل صحيح</p>
-                    </div>
-                `;
-            } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
-                errorMessage = `
-                    <div class="error-scan">
-                        <h3>الكاميرا قيد الاستخدام</h3>
-                        <p>يرجى إغلاق أي تطبيقات أخرى تستخدم الكاميرا وإعادة المحاولة</p>
-                        <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
-                            إعادة المحاولة
-                        </button>
-                    </div>
-                `;
-            } else {
-                errorMessage = `
-                    <div class="error-scan">
-                        <h3>حدث خطأ غير متوقع</h3>
-                        <p>${err.message}</p>
-                        <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
-                            إعادة المحاولة
-                        </button>
-                    </div>
-                `;
+            switch(err.message) {
+                case 'تم رفض الوصول للكاميرا':
+                    errorMessage = `
+                        <div class="error-scan">
+                            <h3>تم رفض الوصول للكاميرا</h3>
+                            <p>يرجى اتباع الخطوات التالية:</p>
+                            <ol style="text-align: right; margin: 10px 20px;">
+                                <li>انقر على أيقونة القفل/الكاميرا في شريط العنوان</li>
+                                <li>اختر "السماح" للوصول إلى الكاميرا</li>
+                                <li>قم بتحديث الصفحة</li>
+                            </ol>
+                            <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                                تحديث الصفحة
+                            </button>
+                        </div>
+                    `;
+                    break;
+                case 'لم يتم العثور على كاميرا':
+                    errorMessage = `
+                        <div class="error-scan">
+                            <h3>لم يتم العثور على كاميرا</h3>
+                            <p>تأكد من:</p>
+                            <ul style="text-align: right; margin: 10px 20px;">
+                                <li>وجود كاميرا في جهازك</li>
+                                <li>أن الكاميرا تعمل بشكل صحيح</li>
+                                <li>عدم استخدام الكاميرا من قبل تطبيق آخر</li>
+                            </ul>
+                            <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                                إعادة المحاولة
+                            </button>
+                        </div>
+                    `;
+                    break;
+                case 'الكاميرا مشغولة':
+                    errorMessage = `
+                        <div class="error-scan">
+                            <h3>الكاميرا مشغولة</h3>
+                            <p>يرجى:</p>
+                            <ul style="text-align: right; margin: 10px 20px;">
+                                <li>إغلاق أي تطبيقات أخرى تستخدم الكاميرا</li>
+                                <li>إعادة تحميل الصفحة</li>
+                            </ul>
+                            <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                                إعادة المحاولة
+                            </button>
+                        </div>
+                    `;
+                    break;
+                default:
+                    errorMessage = `
+                        <div class="error-scan">
+                            <h3>حدث خطأ غير متوقع</h3>
+                            <p>${err.message}</p>
+                            <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                                إعادة المحاولة
+                            </button>
+                        </div>
+                    `;
             }
             
             scanResult.innerHTML = errorMessage;
@@ -272,7 +224,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function onScanSuccess(decodedText, decodedResult) {
         try {
-            const qrData = JSON.parse(decodedText);
+            // First validate that we have a decodedText
+            if (!decodedText) {
+                throw new Error('رمز QR غير صالح أو غير مقروء');
+            }
+
+            let qrData;
+            try {
+                qrData = JSON.parse(decodedText);
+            } catch (parseError) {
+                throw new Error('تنسيق رمز QR غير صحيح');
+            }
+
+            // Validate QR data structure
+            if (!qrData.d || !qrData.c) {
+                throw new Error('بيانات رمز QR غير صالحة');
+            }
+
             const scanResult = document.getElementById('scanResult');
             
             // Get device ID and code from QR
@@ -284,7 +252,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const guestData = createdDevices.find(d => d.deviceId === deviceId);
             
             if (!guestData) {
-                scanResult.innerHTML = '<div class="error-scan">رمز QR غير صالح</div>';
+                scanResult.innerHTML = `
+                    <div class="error-scan">
+                        <h3>رمز QR غير صالح</h3>
+                        <p>لم يتم العثور على بيانات الضيف</p>
+                    </div>`;
                 return;
             }
             
@@ -329,7 +301,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateDeviceList();
             }
         } catch (error) {
-            document.getElementById('scanResult').innerHTML = '<div class="error-scan">رمز QR غير صالح</div>';
+            const scanResult = document.getElementById('scanResult');
+            scanResult.innerHTML = `
+                <div class="error-scan">
+                    <h3>خطأ في قراءة رمز QR</h3>
+                    <p>${error.message}</p>
+                    <p class="scan-tip">تأكد من أن الكاميرا موجهة بشكل صحيح نحو رمز QR</p>
+                </div>
+            `;
+            console.error('QR Scan error:', error);
         }
     }
 
@@ -359,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="device-details">
                                 <p>الضيف: ${device.guest}</p>
                                 <p>رقم الجهاز: ${device.code}</p>
-                                <p>وق إنشاء QR Code: ${new Date(device.timestamp).toLocaleString('ar-SA')}</p>
+                                <p>وقت إنشاء QR Code: ${new Date(device.timestamp).toLocaleString('ar-SA')}</p>
                                 ${scannedDevice ? 
                                     `<p>وقت الدخول للموقع: ${new Date(scannedDevice.scannedAt).toLocaleString('ar-SA')}</p>` 
                                     : ''
@@ -555,7 +535,8 @@ document.addEventListener('DOMContentLoaded', function() {
             scanResult.innerHTML = `
                 <div class="error-scan">
                     <h3>خطأ في المسح</h3>
-                    <p>${error}</p>
+                    <p>حاول توجيه الكاميرا بشكل أفضل نحو رمز QR</p>
+                    <p class="scan-tip">تأكد من أن رمز QR واضح وبإضاءة كافية</p>
                 </div>
             `;
         }
