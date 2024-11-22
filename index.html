@@ -12,12 +12,61 @@
             console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
             return false;
         };
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'PrintScreen') {
-                event.preventDefault();
-                alert("السكرين شوت غير مسموح به");
+        // Detect screenshots and screen recording
+        const screenshotDetector = {
+            init() {
+                // Detect PrintScreen key
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'PrintScreen' || e.code === 'PrintScreen') {
+                        e.preventDefault();
+                        this.handleViolation('Screenshot attempt detected');
+                    }
+                });
+
+                // Detect screen capture API
+                if (navigator.mediaDevices) {
+                    navigator.mediaDevices.getDisplayMedia = () => {
+                        this.handleViolation('Screen recording attempt detected');
+                        return Promise.reject(new Error('Screen capture not allowed'));
+                    };
+                }
+
+                // Detect clipboard image copying
+                document.addEventListener('copy', (e) => {
+                    if (e.clipboardData) {
+                        e.preventDefault();
+                        this.handleViolation('Content copy attempt detected');
+                    }
+                });
+
+                // Disable right click
+                document.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    this.handleViolation('Right click disabled');
+                });
+
+                // Detect visibility change (tab switching for screenshots)
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        this.checkForScreenCapture();
+                    }
+                });
+            },
+
+            handleViolation(message) {
+                alert("Content protection violation: " + message);
+                console.warn(message);
+            },
+
+            checkForScreenCapture() {
+                if (window.screenTop < 0 || window.screenY < 0) {
+                    this.handleViolation('Possible screen capture detected');
+                }
             }
-        });
+        };
+
+        // Initialize screenshot detection
+        screenshotDetector.init();
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
