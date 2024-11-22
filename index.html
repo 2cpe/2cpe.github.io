@@ -50,7 +50,7 @@
                     }
                 });
 
-                // Additional screenshot detection
+                // Additional screenshot detection including iOS
                 window.addEventListener('keydown', (e) => {
                     if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
                         e.preventDefault();
@@ -60,7 +60,39 @@
                         e.preventDefault();
                         this.handleViolation('Screenshot attempt detected');
                     }
+                    // iOS screenshot detection (Command + Shift + 3 or 4)
+                    if ((e.metaKey && e.shiftKey) && (e.key === '3' || e.key === '4')) {
+                        e.preventDefault();
+                        this.handleViolation('iOS screenshot attempt detected');
+                    }
                 });
+
+                // iOS specific detection
+                if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+                    // Detect iOS screen recording
+                    if (window.matchMedia('(display-mode: standalone)').matches) {
+                        this.handleViolation('iOS screen recording detected');
+                    }
+                    
+                    // Add iOS screenshot gesture detection
+                    let startTime = 0;
+                    let startY = 0;
+                    
+                    document.addEventListener('touchstart', (e) => {
+                        if (e.touches.length === 2) {
+                            startTime = Date.now();
+                            startY = e.touches[0].clientY;
+                        }
+                    });
+
+                    document.addEventListener('touchend', (e) => {
+                        const endTime = Date.now();
+                        const duration = endTime - startTime;
+                        if (duration < 500 && Math.abs(e.changedTouches[0].clientY - startY) > 50) {
+                            this.handleViolation('iOS screenshot gesture detected');
+                        }
+                    });
+                }
             },
 
             handleViolation(message) {
