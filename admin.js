@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     showZoomSliderIfSupported: true,
                     defaultZoomValueIfSupported: 2,
                     videoConstraints: {
-                        facingMode: { exact: "environment" }
+                        facingMode: "environment"
                     }
                 }
             );
