@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Request camera permission explicitly first
             const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: true  // Simplified video constraints
+                video: { facingMode: { ideal: "environment" } }  // Prefer back camera
             });
             
             // Stop the test stream
@@ -99,13 +99,108 @@ document.addEventListener('DOMContentLoaded', function() {
                 "reader",
                 { 
                     fps: 10,
-                    qrbox: 250,  // Simplified qrbox configuration
-                    rememberLastUsedCamera: true,
-                    // Remove other complex configurations
+                    qrbox: { width: 250, height: 250 },
+                    experimentalFeatures: {
+                        useBarCodeDetectorIfSupported: false
+                    },
+                    verbose: false
                 }
             );
 
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+            html5QrcodeScanner.render((decodedText, decodedResult) => {
+                try {
+                    // First try to parse as JSON
+                    let qrData;
+                    try {
+                        qrData = JSON.parse(decodedText);
+                    } catch (e) {
+                        // If JSON parsing fails, check if it's a valid QR code format
+                        if (typeof decodedText === 'string' && decodedText.includes(',')) {
+                            const [deviceId, code] = decodedText.split(',');
+                            qrData = { d: deviceId, c: code };
+                        } else {
+                            throw new Error('رمز QR غير صالح');
+                        }
+                    }
+
+                    const scanResult = document.getElementById('scanResult');
+                    
+                    // Get device ID and code from QR
+                    const deviceId = qrData.d;
+                    const code = qrData.c;
+                    
+                    if (!deviceId || !code) {
+                        throw new Error('بيانات QR غير مكتملة');
+                    }
+                    
+                    // Find the guest info from stored data
+                    const createdDevices = JSON.parse(localStorage.getItem('qr_data_list') || '[]');
+                    const guestData = createdDevices.find(d => d.deviceId === deviceId);
+                    
+                    if (!guestData) {
+                        scanResult.innerHTML = '<div class="error-scan">رمز QR غير صالح</div>';
+                        return;
+                    }
+                    
+                    // Check if device is already scanned
+                    const existingDevice = scannedDevices.find(d => d.deviceId === deviceId);
+                    
+                    if (existingDevice) {
+                        scanResult.innerHTML = `
+                            <div class="error-scan">
+                                <h3>تم المسح مسبقاً</h3>
+                                <p>تم مسح هذا الرمز من قبل</p>
+                                <div class="device-info">
+                                    <p>رقم الجهاز: ${code}</p>
+                                    <p>اسم الضيف: ${guestData.guest}</p>
+                                    <p>وقت المسح السابق: ${new Date(existingDevice.scannedAt).toLocaleString('ar-SA')}</p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Add to scanned devices
+                        scannedDevices.push({
+                            deviceId: deviceId,
+                            code: code,
+                            guest: guestData.guest,
+                            scannedAt: new Date().toISOString()
+                        });
+                        localStorage.setItem('scanned_devices', JSON.stringify(scannedDevices));
+                        
+                        scanResult.innerHTML = `
+                            <div class="success-scan">
+                                <h3>تشرفنا بحضوركم</h3>
+                                <p>مرحباً بك، ${guestData.guest}</p>
+                                <div class="thank-you-message">شكراً لحضورك الحفل</div>
+                                <div class="device-info">
+                                    <p>رقم الجهاز: ${code}</p>
+                                </div>
+                                <div class="timestamp">
+                                    ${new Date().toLocaleString('ar-SA')}
+                                </div>
+                            </div>
+                        `;
+                        updateDeviceList();
+                    }
+                } catch (error) {
+                    scanResult.innerHTML = `
+                        <div class="error-scan">
+                            <h3>خطأ في قراءة الرمز</h3>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
+                }
+            }, (error) => {
+                // Only show errors that aren't related to normal scanning process
+                if (error && !error.includes("No QR code found")) {
+                    scanResult.innerHTML = `
+                        <div class="error-scan">
+                            <h3>خطأ في المسح</h3>
+                            <p>${error}</p>
+                        </div>
+                    `;
+                }
+            });
 
         } catch (err) {
             let errorMessage = '';
@@ -264,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="device-details">
                                 <p>الضيف: ${device.guest}</p>
                                 <p>رقم الجهاز: ${device.code}</p>
-                                <p>وق�� إنشاء QR Code: ${new Date(device.timestamp).toLocaleString('ar-SA')}</p>
+                                <p>وق إنشاء QR Code: ${new Date(device.timestamp).toLocaleString('ar-SA')}</p>
                                 ${scannedDevice ? 
                                     `<p>وقت الدخول للموقع: ${new Date(scannedDevice.scannedAt).toLocaleString('ar-SA')}</p>` 
                                     : ''
