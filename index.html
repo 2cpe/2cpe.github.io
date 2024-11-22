@@ -16,7 +16,7 @@
         const screenshotDetector = {
             init() {
                 // Detect PrintScreen key
-                document.addEventListener('keydown', (e) => {
+                document.addEventListener('keyup', (e) => {
                     if (e.key === 'PrintScreen' || e.code === 'PrintScreen') {
                         e.preventDefault();
                         this.handleViolation('Screenshot attempt detected');
@@ -33,40 +33,56 @@
 
                 // Detect clipboard image copying
                 document.addEventListener('copy', (e) => {
-                    if (e.clipboardData) {
-                        e.preventDefault();
-                        this.handleViolation('Content copy attempt detected');
+                    e.preventDefault();
+                    this.handleViolation('Content copy attempt detected');
+                });
+
+                // Detect right click
+                document.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    this.handleViolation('Right click attempt detected');
+                });
+
+                // Detect visibility change and screenshots
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        this.handleViolation('Tab switch detected - possible screenshot attempt');
                     }
                 });
 
-                // Disable right click
-                document.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    this.handleViolation('Right click disabled');
-                });
-
-                // Detect visibility change (tab switching for screenshots)
-                document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') {
-                        this.checkForScreenCapture();
+                // Additional screenshot detection
+                window.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+                        e.preventDefault();
+                        this.handleViolation('Copy attempt detected');
+                    }
+                    if ((e.ctrlKey || e.metaKey) && (e.shiftKey) && (e.key === 's' || e.key === 'S')) {
+                        e.preventDefault();
+                        this.handleViolation('Screenshot attempt detected');
                     }
                 });
             },
 
             handleViolation(message) {
-                alert("Content protection violation: " + message);
-                console.warn(message);
+                alert("⚠️ WARNING: " + message);
+                console.warn('Security violation:', message);
             },
 
             checkForScreenCapture() {
-                if (window.screenTop < 0 || window.screenY < 0) {
-                    this.handleViolation('Possible screen capture detected');
+                const isScreenCapturing = window.screenTop < 0 || 
+                                        window.screenY < 0 || 
+                                        window.outerHeight > window.screen.availHeight ||
+                                        window.outerWidth > window.screen.availWidth;
+                
+                if (isScreenCapturing) {
+                    this.handleViolation('Screen capture or recording detected');
                 }
             }
         };
 
         // Initialize screenshot detection
         screenshotDetector.init();
+        setInterval(() => screenshotDetector.checkForScreenCapture(), 1000);
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
