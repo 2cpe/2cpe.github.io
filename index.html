@@ -12,109 +12,62 @@
             console.error('Error: ' + msg + '\nURL: ' + url + '\nLine: ' + lineNo);
             return false;
         };
-        // Detect screenshots and screen recording
+        // Detect screenshots and screen recording for iOS
         const screenshotDetector = {
             init() {
-                // Detect PrintScreen key
-                document.addEventListener('keyup', (e) => {
-                    if (e.key === 'PrintScreen' || e.code === 'PrintScreen') {
-                        e.preventDefault();
-                        this.handleViolation('Screenshot attempt detected');
-                    }
-                });
-
-                // Detect screen capture API
-                if (navigator.mediaDevices) {
-                    navigator.mediaDevices.getDisplayMedia = () => {
-                        this.handleViolation('Screen recording attempt detected');
-                        return Promise.reject(new Error('Screen capture not allowed'));
-                    };
+                // Only proceed if device is iOS
+                if (!navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+                    return;
                 }
 
-                // Detect clipboard image copying
-                document.addEventListener('copy', (e) => {
-                    e.preventDefault();
-                    this.handleViolation('Content copy attempt detected');
-                });
-
-                // Detect right click
-                document.addEventListener('contextmenu', (e) => {
-                    e.preventDefault();
-                    this.handleViolation('Right click attempt detected');
-                });
-
-                // Detect visibility change and screenshots
-                document.addEventListener('visibilitychange', () => {
-                    if (document.visibilityState === 'hidden') {
-                        this.handleViolation('Tab switch detected - possible screenshot attempt');
-                    }
-                });
-
-                // Additional screenshot detection including iOS
+                // iOS screenshot detection (Command + Shift + 3 or 4)
                 window.addEventListener('keydown', (e) => {
-                    if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
-                        e.preventDefault();
-                        this.handleViolation('Copy attempt detected');
-                    }
-                    if ((e.ctrlKey || e.metaKey) && (e.shiftKey) && (e.key === 's' || e.key === 'S')) {
-                        e.preventDefault();
-                        this.handleViolation('Screenshot attempt detected');
-                    }
-                    // iOS screenshot detection (Command + Shift + 3 or 4)
                     if ((e.metaKey && e.shiftKey) && (e.key === '3' || e.key === '4')) {
                         e.preventDefault();
                         this.handleViolation('iOS screenshot attempt detected');
                     }
                 });
 
-                // iOS specific detection
-                if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-                    // Detect iOS screen recording
-                    if (window.matchMedia('(display-mode: standalone)').matches) {
-                        this.handleViolation('iOS screen recording detected');
-                    }
-                    
-                    // Add iOS screenshot gesture detection
-                    let startTime = 0;
-                    let startY = 0;
-                    
-                    document.addEventListener('touchstart', (e) => {
-                        if (e.touches.length === 2) {
-                            startTime = Date.now();
-                            startY = e.touches[0].clientY;
-                        }
-                    });
-
-                    document.addEventListener('touchend', (e) => {
-                        const endTime = Date.now();
-                        const duration = endTime - startTime;
-                        if (duration < 500 && Math.abs(e.changedTouches[0].clientY - startY) > 50) {
-                            this.handleViolation('iOS screenshot gesture detected');
-                        }
-                    });
+                // Detect iOS screen recording
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    this.handleViolation('iOS screen recording detected');
                 }
+                
+                // Add iOS screenshot gesture detection
+                let startTime = 0;
+                let startY = 0;
+                
+                document.addEventListener('touchstart', (e) => {
+                    if (e.touches.length === 2) {
+                        startTime = Date.now();
+                        startY = e.touches[0].clientY;
+                    }
+                });
+
+                document.addEventListener('touchend', (e) => {
+                    const endTime = Date.now();
+                    const duration = endTime - startTime;
+                    if (duration < 500 && Math.abs(e.changedTouches[0].clientY - startY) > 50) {
+                        this.handleViolation('iOS screenshot gesture detected');
+                    }
+                });
+
+                // Detect visibility change for iOS screenshots
+                document.addEventListener('visibilitychange', () => {
+                    if (document.visibilityState === 'hidden') {
+                        this.handleViolation('Tab switch detected - possible screenshot attempt');
+                    }
+                });
             },
 
             handleViolation(message) {
                 alert("⚠️ WARNING: " + message);
                 console.warn('Security violation:', message);
-            },
-
-            checkForScreenCapture() {
-                const isScreenCapturing = window.screenTop < 0 || 
-                                        window.screenY < 0 || 
-                                        window.outerHeight > window.screen.availHeight ||
-                                        window.outerWidth > window.screen.availWidth;
-                
-                if (isScreenCapturing) {
-                    this.handleViolation('Screen capture or recording detected');
-                }
             }
         };
 
         // Initialize screenshot detection
         screenshotDetector.init();
-        setInterval(() => screenshotDetector.checkForScreenCapture(), 1000);
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
