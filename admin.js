@@ -529,17 +529,83 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function onScanFailure(error) {
-        // Only show errors that aren't related to normal scanning process
-        if (error && !error.includes("No QR code found")) {
-            const scanResult = document.getElementById('scanResult');
-            scanResult.innerHTML = `
+        const scanResult = document.getElementById('scanResult');
+        
+        // Don't show error for normal scanning process
+        if (!error || error.includes("No QR code found")) {
+            return;
+        }
+
+        // Handle different types of scan errors
+        let errorMessage = '';
+        
+        if (error.includes("NotReadableError") || error.includes("TrackStartError")) {
+            errorMessage = `
+                <div class="error-scan">
+                    <h3>خطأ في الوصول للكاميرا</h3>
+                    <p>الكاميرا مشغولة أو غير متاحة</p>
+                    <p class="scan-tip">حاول إغلاق التطبيقات الأخرى التي قد تستخدم الكاميرا</p>
+                    <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                        إعادة المحاولة
+                    </button>
+                </div>
+            `;
+        } else if (error.includes("OverconstrainedError")) {
+            errorMessage = `
+                <div class="error-scan">
+                    <h3>إعدادات الكاميرا غير متوافقة</h3>
+                    <p>الكاميرا لا تدعم الإعدادات المطلوبة</p>
+                    <p class="scan-tip">جرب استخدام كاميرا أخرى إذا كانت متوفرة</p>
+                    <button onclick="initializeCamera()" class="admin-btn" style="margin-top: 15px;">
+                        إعادة المحاولة
+                    </button>
+                </div>
+            `;
+        } else if (error.includes("NotFoundError") || error.includes("DevicesNotFoundError")) {
+            errorMessage = `
+                <div class="error-scan">
+                    <h3>لم يتم العثور على كاميرا</h3>
+                    <p>تأكد من وجود كاميرا متصلة بجهازك</p>
+                    <p class="scan-tip">قد تحتاج إلى إعادة تشغيل المتصفح</p>
+                    <button onclick="window.location.reload()" class="admin-btn" style="margin-top: 15px;">
+                        تحديث الصفحة
+                    </button>
+                </div>
+            `;
+        } else if (error.includes("low light")) {
+            errorMessage = `
+                <div class="error-scan">
+                    <h3>إضاءة منخفضة</h3>
+                    <p>الإضاءة غير كافية لمسح رمز QR</p>
+                    <p class="scan-tip">حاول زيادة الإضاءة في المكان أو استخدام مصدر إضاءة إضافي</p>
+                </div>
+            `;
+        } else if (error.includes("blurry")) {
+            errorMessage = `
+                <div class="error-scan">
+                    <h3>الصورة غير واضحة</h3>
+                    <p>حاول تثبيت الكاميرا وإبقائها ثابتة</p>
+                    <p class="scan-tip">تأكد من أن رمز QR في مركز الكاميرا وواضح</p>
+                </div>
+            `;
+        } else {
+            errorMessage = `
                 <div class="error-scan">
                     <h3>خطأ في المسح</h3>
                     <p>حاول توجيه الكاميرا بشكل أفضل نحو رمز QR</p>
-                    <p class="scan-tip">تأكد من أن رمز QR واضح وبإضاءة كافية</p>
+                    <p class="scan-tip">تأكد من:</p>
+                    <ul style="text-align: right; margin: 10px 20px;">
+                        <li>أن رمز QR واضح وغير تالف</li>
+                        <li>أن الإضاءة كافية</li>
+                        <li>أن الكاميرا ثابتة وليست مهتزة</li>
+                        <li>أن رمز QR في مركز إطار المسح</li>
+                    </ul>
                 </div>
             `;
         }
+
+        scanResult.innerHTML = errorMessage;
+        console.warn('Scan error:', error);
     }
 
     // Add auto-refresh every 30 seconds when device list section is visible
