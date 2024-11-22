@@ -2164,4 +2164,65 @@ html {
     margin: 5px 0;
     color: var(--text-light);
 }
+
+.scanned-qr {
+    margin: 20px auto;
+    width: 200px;
+    height: 200px;
+    background: var(--bg-darker);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--accent-success);
+    position: relative;
+    overflow: hidden;
+}
+
+.qr-thank-you {
+    font-size: 24px;
+    color: var(--accent-success);
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Noto Naskh Arabic', serif;
+    animation: fadeInScale 0.5s ease-out;
+}
+
+.scan-again-btn {
+    margin-top: 20px;
+    background: var(--accent-success) !important;
+    border: none;
+    color: var(--text-light) !important;
+}
+
+.scan-again-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(74, 155, 127, 0.3);
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.success-scan {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
   

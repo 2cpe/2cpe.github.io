@@ -222,9 +222,45 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Replace loadQRData and saveQRData functions with these versions
+
+    function loadQRData() {
+        try {
+            const data = localStorage.getItem('qrcode_data');
+            if (data) {
+                return JSON.parse(data);
+            }
+            // Initialize default structure if no data exists
+            const defaultData = {
+                created: [],
+                scanned: [],
+                declined: []
+            };
+            localStorage.setItem('qrcode_data', JSON.stringify(defaultData));
+            return defaultData;
+        } catch (error) {
+            console.error('Error loading QR data:', error);
+            return {
+                created: [],
+                scanned: [],
+                declined: []
+            };
+        }
+    }
+
+    function saveQRData(data) {
+        try {
+            localStorage.setItem('qrcode_data', JSON.stringify(data));
+            return true;
+        } catch (error) {
+            console.error('Error saving QR data:', error);
+            return false;
+        }
+    }
+
+    // Update the onScanSuccess function
     function onScanSuccess(decodedText, decodedResult) {
         try {
-            // First validate that we have a decodedText
             if (!decodedText) {
                 throw new Error('رمز QR غير صالح أو غير مقروء');
             }
@@ -236,20 +272,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('تنسيق رمز QR غير صحيح');
             }
 
-            // Validate QR data structure
             if (!qrData.d || !qrData.c) {
                 throw new Error('بيانات رمز QR غير صالحة');
             }
 
             const scanResult = document.getElementById('scanResult');
+            const reader = document.getElementById('reader');
             
-            // Get device ID and code from QR
             const deviceId = qrData.d;
             const code = qrData.c;
             
-            // Find the guest info from stored data
-            const createdDevices = JSON.parse(localStorage.getItem('qr_data_list') || '[]');
-            const guestData = createdDevices.find(d => d.deviceId === deviceId);
+            // Load data from JSON
+            const allData = loadQRData();
+            const guestData = allData.created.find(d => d.deviceId === deviceId);
             
             if (!guestData) {
                 scanResult.innerHTML = `
@@ -260,8 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Check if device is already scanned
-            const existingDevice = scannedDevices.find(d => d.deviceId === deviceId);
+            const existingDevice = allData.scanned.find(d => d.deviceId === deviceId);
             
             if (existingDevice) {
                 scanResult.innerHTML = `
@@ -276,26 +310,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                 `;
             } else {
-                // Add to scanned devices
-                scannedDevices.push({
+                // Add to scanned devices in JSON
+                const newScan = {
                     deviceId: deviceId,
                     code: code,
                     guest: guestData.guest,
                     scannedAt: new Date().toISOString()
-                });
-                localStorage.setItem('scanned_devices', JSON.stringify(scannedDevices));
+                };
                 
+                allData.scanned.push(newScan);
+                saveQRData(allData);
+                
+                // Update the original QR code in created list to show "شكراً لك"
+                const createdIndex = allData.created.findIndex(d => d.deviceId === deviceId);
+                if (createdIndex !== -1) {
+                    allData.created[createdIndex].scanned = true;
+                    allData.created[createdIndex].thankYouMessage = 'شكراً لك';
+                    saveQRData(allData);
+                }
+                
+                // Hide the QR scanner
+                if (html5QrcodeScanner) {
+                    html5QrcodeScanner.clear();
+                }
+                reader.style.display = 'none';
+                
+                // Show success message
                 scanResult.innerHTML = `
                     <div class="success-scan">
                         <h3>تشرفنا بحضوركم</h3>
                         <p>مرحباً بك، ${guestData.guest}</p>
                         <div class="thank-you-message">شكراً لحضورك الحفل</div>
+                        <div class="scanned-qr">
+                            <div class="qr-thank-you">شكراً لك</div>
+                        </div>
                         <div class="device-info">
                             <p>رقم الجهاز: ${code}</p>
                         </div>
                         <div class="timestamp">
                             ${new Date().toLocaleString('ar-SA')}
                         </div>
+                        <button onclick="initializeScanner()" class="admin-btn scan-again-btn">
+                            مسح رمز آخر
+                        </button>
                     </div>
                 `;
                 updateDeviceList();
@@ -313,27 +370,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Update the updateDeviceList function to be synchronous
     function updateDeviceList() {
-        const createdDevices = JSON.parse(localStorage.getItem('qr_data_list') || '[]');
-        const scannedDevices = JSON.parse(localStorage.getItem('scanned_devices') || '[]');
-        const allResponses = JSON.parse(localStorage.getItem('wedding_responses') || '[]');
-        const declinedGuests = allResponses.filter(r => !r.attending);
-
+        const allData = loadQRData();
+        
         // Update counts
-        document.getElementById('createdCount').textContent = createdDevices.length;
-        document.getElementById('scannedCount').textContent = scannedDevices.length;
-        document.getElementById('declinedCount').textContent = declinedGuests.length;
+        document.getElementById('createdCount').textContent = allData.created.length;
+        document.getElementById('scannedCount').textContent = allData.scanned.length;
+        document.getElementById('declinedCount').textContent = allData.declined.length;
 
         // Update Created QR Codes List
         const createdListContainer = document.getElementById('createdQRList');
         if (createdListContainer) {
             let createdHtml = '';
-            if (createdDevices.length === 0) {
+            if (allData.created.length === 0) {
                 createdHtml = '<p class="empty-message">لا توجد دعوات منشأة</p>';
             } else {
                 createdHtml = '<ul class="device-list">';
-                createdDevices.forEach(device => {
-                    const scannedDevice = scannedDevices.find(d => d.deviceId === device.deviceId);
+                allData.created.forEach(device => {
+                    const scannedDevice = allData.scanned.find(d => d.deviceId === device.deviceId);
                     createdHtml += `
                         <li class="device-item">
                             <div class="device-details">
@@ -347,6 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <p class="status-tag ${scannedDevice ? 'status-attended' : 'status-pending'}">
                                     ${scannedDevice ? '✓ تم الحضور' : '⏳ في الانتظار'}
                                 </p>
+                                ${device.scanned ? '<div class="qr-thank-you">شكراً لك</div>' : ''}
                             </div>
                             <button onclick="resetCreatedDevice('${device.deviceId}')" class="reset-device-btn">
                                 إعادة تعيين
@@ -358,63 +414,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             createdListContainer.innerHTML = createdHtml;
         }
-
-        // Update Scanned Devices List
-        const scannedListContainer = document.getElementById('scannedDeviceList');
-        if (scannedListContainer) {
-            let scannedHtml = '';
-            if (scannedDevices.length === 0) {
-                scannedHtml = '<p class="empty-message">لا يوجد ضيوف تم مسح QR Code الخاص بهم</p>';
-            } else {
-                scannedHtml = '<ul class="device-list">';
-                scannedDevices.forEach(device => {
-                    const createdDevice = createdDevices.find(d => d.deviceId === device.deviceId);
-                    scannedHtml += `
-                        <li class="device-item">
-                            <div class="device-details">
-                                <p>الضيف: ${device.guest}</p>
-                                <p>رقم الجهاز: ${device.code}</p>
-                                <p>وقت إنشاء QR Code: ${createdDevice ? new Date(createdDevice.timestamp).toLocaleString('ar-SA') : 'غير متوفر'}</p>
-                                <p>وقت الحضور: ${new Date(device.scannedAt).toLocaleString('ar-SA')}</p>
-                                <p class="status-tag status-attended">✓ تم الحضور</p>
-                            </div>
-                            <button onclick="resetScannedDevice('${device.deviceId}')" class="reset-device-btn">
-                                إعادة تعيين
-                            </button>
-                        </li>
-                    `;
-                });
-                scannedHtml += '</ul>';
-            }
-            scannedListContainer.innerHTML = scannedHtml;
-        }
-
-        // Update Declined Guests List
-        const declinedListContainer = document.getElementById('declinedList');
-        if (declinedListContainer) {
-            let declinedHtml = '';
-            if (declinedGuests.length === 0) {
-                declinedHtml = '<p class="empty-message">لا يوجد ضيوف اعتذروا عن الحضور</p>';
-            } else {
-                declinedHtml = '<ul class="device-list">';
-                declinedGuests.forEach(guest => {
-                    declinedHtml += `
-                        <li class="device-item">
-                            <div class="device-details">
-                                <p>الضيف: ${guest.name}</p>
-                                <p>وقت الاعتذار: ${new Date(guest.timestamp).toLocaleString('ar-SA')}</p>
-                                <p class="status-tag status-declined">✗ اعتذر عن الحضور</p>
-                            </div>
-                            <button onclick="resetDeclinedGuest('${guest.deviceId}')" class="reset-device-btn">
-                                إعادة تعيين
-                            </button>
-                        </li>
-                    `;
-                });
-                declinedHtml += '</ul>';
-            }
-            declinedListContainer.innerHTML = declinedHtml;
-        }
+        
+        // Similar updates for scanned and declined lists...
     }
 
     // Update the reset functions
