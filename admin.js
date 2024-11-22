@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Request camera permission explicitly first
             const stream = await navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: "environment" } // Prefer back camera on mobile
+                video: true  // Simplified video constraints
             });
             
             // Stop the test stream
@@ -97,16 +97,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             html5QrcodeScanner = new Html5QrcodeScanner(
                 "reader",
-                {
+                { 
                     fps: 10,
-                    qrbox: { width: 250, height: 250 },
-                    aspectRatio: 1.0,
-                    showTorchButtonIfSupported: true,
-                    showZoomSliderIfSupported: true,
-                    defaultZoomValueIfSupported: 2,
-                    videoConstraints: {
-                        facingMode: "environment"
-                    }
+                    qrbox: 250,  // Simplified qrbox configuration
+                    rememberLastUsedCamera: true,
+                    // Remove other complex configurations
                 }
             );
 
@@ -269,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="device-details">
                                 <p>الضيف: ${device.guest}</p>
                                 <p>رقم الجهاز: ${device.code}</p>
-                                <p>وقت إنشاء QR Code: ${new Date(device.timestamp).toLocaleString('ar-SA')}</p>
+                                <p>وق�� إنشاء QR Code: ${new Date(device.timestamp).toLocaleString('ar-SA')}</p>
                                 ${scannedDevice ? 
                                     `<p>وقت الدخول للموقع: ${new Date(scannedDevice.scannedAt).toLocaleString('ar-SA')}</p>` 
                                     : ''
