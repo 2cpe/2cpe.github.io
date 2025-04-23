@@ -33,12 +33,12 @@
                 "ترتيب من اليسار الى اليمين في الصف فرز تصاعدي",
                 "كل ما سبق"
             ],
-            correctAnswer: 3,
+            correctAnswer: 2,
             score: 1.00
         },
         {
             question: "في Excel المخطط التالي, الى أي شيء تشير التسمية في C؟",
-            options: ["تسميات البيانات", "عنوان المخطط", "عالمات البيانات", "محور البيانات"],
+            options: ["تسميات البيانات", "عنوان المخطط", "علامات البيانات", "محور البيانات"],
             correctAnswer: 1,
             score: 1.00
         },
@@ -212,7 +212,7 @@
         {
             question: "في Excel إذا تم استخدام الدالة SUMIF مع القيم 100 و110 و120 و130 وكان المعيار هو >=100 ، فما تكون نتيجة الصيغة؟",
             options: ["100", "460", "360", "0"],
-            correctAnswer: 1,
+            correctAnswer: 2,
             score: 1.00
         },
         {
@@ -224,7 +224,7 @@
         {
             question: "في Access ماهو امتداد ملفات القوالب اكسيس",
             options: ["accdb", "accdt", "accde", "mdb"],
-            correctAnswer: 1,
+            correctAnswer: 2,
             score: 1.00
         },
         {
@@ -435,7 +435,6 @@
             score: 1.00
         }
     ];
-
     // Make questions available globally
     global.questions = questions;
 
