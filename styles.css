@@ -302,4 +302,56 @@ header h1 {
         flex-direction: column;
         gap: 10px;
     }
+    
+    .options-container {
+        gap: 8px;
+    }
+    
+    .option {
+        padding: 10px;
+    }
+    
+    .question-text {
+        padding: 10px;
+        font-size: 0.95rem;
+    }
+    
+    .question-footer {
+        flex-direction: column-reverse;
+        gap: 15px;
+    }
+    
+    .question-nav-buttons {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .nav-btn {
+        flex: 1;
+        margin: 0 5px;
+    }
+    
+    .question-status {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .question-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+    
+    .exam-title h1 {
+        font-size: 1rem;
+    }
+    
+    .nav-header {
+        font-size: 0.8rem;
+    }
+    
+    .info-item {
+        font-size: 0.8rem;
+    }
 } 
