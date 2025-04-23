@@ -71,7 +71,27 @@ function displayQuestion() {
     
     logDebug(`Displaying question ${currentQuestionIndex + 1}: ${question.question.substring(0, 20)}...`);
     
-    questionText.textContent = question.question;
+    // Clear previous question content
+    questionText.innerHTML = '';
+    
+    // Add the question text
+    const questionTextElement = document.createElement('div');
+    questionTextElement.textContent = question.question;
+    questionText.appendChild(questionTextElement);
+    
+    // Add image if it exists
+    if (question.image) {
+        const imageElement = document.createElement('img');
+        imageElement.src = question.image;
+        imageElement.alt = "Chart image for question";
+        imageElement.style.maxWidth = "100%";
+        imageElement.style.display = "block";
+        imageElement.style.margin = "15px auto";
+        imageElement.style.borderRadius = "4px";
+        imageElement.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
+        questionText.appendChild(imageElement);
+    }
+    
     currentQuestionSpan.textContent = currentQuestionIndex + 1;
     
     optionsContainer.innerHTML = '';

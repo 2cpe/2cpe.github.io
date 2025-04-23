@@ -40,7 +40,8 @@
             question: "في Excel المخطط التالي, الى أي شيء تشير التسمية في C؟",
             options: ["تسميات البيانات", "عنوان المخطط", "علامات البيانات", "محور البيانات"],
             correctAnswer: 1,
-            score: 1.00
+            score: 1.00,
+            image: "images/chart_C_real.svg"
         },
         {
             question: "في Access في أي صورة يتم تخزين البيانات في Access?",
@@ -314,7 +315,8 @@
             question: "في Excel المخطط التالي, الى أي شيء تشير التسمية في B?",
             options: ["علامات البيانات", "عنوان المخطط", "تسميات البيانات", "محور البيانات"],
             correctAnswer: 1,
-            score: 1.00
+            score: 1.00,
+            image: "images/chart_B.svg"
         },
         {
             question: "في Word يمكن إضافة نص إضافي الى جدول محتويات موجود",
@@ -390,7 +392,8 @@
             question: "في Excel المخطط التالي، إلى أي شيء تشير التسمية في A",
             options: ["عنوان المخطط", "تسميات البيانات", "علامات البيانات", "محور البيانات"],
             correctAnswer: 1,
-            score: 1.00
+            score: 1.00,
+            image: "images/chart_A.svg"
         },
         {
             question: "في Excel تُرجع الدالة AND دائماً النتيجة العكسية للدالة OR.",
