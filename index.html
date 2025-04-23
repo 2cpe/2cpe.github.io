@@ -50,7 +50,12 @@
             </div>
         </div>
     </div>
-    <script src="questions.js"></script>
-    <script src="app.js"></script>
+    
+    <!-- Add a loading indicator -->
+    <div id="loading-indicator" class="loading-indicator">جاري تحميل الأسئلة...</div>
+    
+    <!-- Load scripts with defer attribute to ensure they execute in order after page loads -->
+    <script src="questions.js" defer></script>
+    <script src="app.js" defer></script>
 </body>
 </html> 

@@ -2,6 +2,7 @@ let currentQuestionIndex = 0;
 let score = 0;
 let answers = [];
 let startTime = new Date();
+let questions = []; // Initialize questions array
 
 const questionText = document.getElementById('question-text');
 const optionsContainer = document.getElementById('options-container');
@@ -13,10 +14,19 @@ const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const statusIndicator = document.getElementById('status-indicator');
 
+// Log for debugging
+function logDebug(message) {
+    console.log(`[Debug] ${message}`);
+}
+
 function initializeQuestionGrid() {
     const grid = document.querySelector('.question-grid');
-    if (!grid) return; // Guard clause for missing elements
+    if (!grid) {
+        logDebug('Question grid not found');
+        return;
+    }
     
+    logDebug(`Initializing grid with ${getTotalQuestions()} questions`);
     for (let i = 0; i < getTotalQuestions(); i++) {
         const btn = document.createElement('button');
         btn.className = 'question-number-btn';
@@ -36,7 +46,7 @@ function updateQuestionGrid() {
         }
         if (answers[index] !== null && answers[index] !== undefined) {
             const question = getQuestion(index);
-            if (answers[index] + 1 === question.correctAnswer) {
+            if (question && answers[index] + 1 === question.correctAnswer) {
                 btn.classList.add('correct');
             } else {
                 btn.classList.add('wrong');
@@ -46,10 +56,19 @@ function updateQuestionGrid() {
 }
 
 function displayQuestion() {
-    if (!questionText || !optionsContainer || !currentQuestionSpan) return; // Guard clause for missing elements
+    if (!questionText || !optionsContainer || !currentQuestionSpan) {
+        logDebug('Missing DOM elements for question display');
+        return;
+    }
     
     const question = getQuestion(currentQuestionIndex);
-    if (!question) return; // Guard clause for missing question
+    if (!question) {
+        logDebug(`Question not found for index ${currentQuestionIndex}`);
+        questionText.textContent = "خطأ في تحميل السؤال";
+        return;
+    }
+    
+    logDebug(`Displaying question ${currentQuestionIndex + 1}: ${question.question.substring(0, 20)}...`);
     
     questionText.textContent = question.question;
     currentQuestionSpan.textContent = currentQuestionIndex + 1;
@@ -87,16 +106,18 @@ function navigateToQuestion(index) {
 }
 
 function updateNavButtons() {
-    if (!prevBtn || !nextBtn) return; // Guard clause for missing elements
+    if (!prevBtn || !nextBtn) return;
     
     prevBtn.disabled = currentQuestionIndex === 0;
     nextBtn.disabled = currentQuestionIndex === getTotalQuestions() - 1;
 }
 
 function updateStatus() {
-    if (!statusIndicator) return; // Guard clause for missing element
+    if (!statusIndicator) return;
     
     const question = getQuestion(currentQuestionIndex);
+    if (!question) return;
+    
     const answer = answers[currentQuestionIndex];
     
     if (answer === null || answer === undefined) {
@@ -109,14 +130,14 @@ function updateStatus() {
 }
 
 function updateScore() {
-    if (!scoreElement) return; // Guard clause for missing element
+    if (!scoreElement) return;
     
     let currentScore = 0;
     const maxScore = getMaxScore();
     
     answers.forEach((answer, index) => {
         const question = getQuestion(index);
-        if (answer !== null && answer !== undefined && answer + 1 === question.correctAnswer) {
+        if (question && answer !== null && answer !== undefined && answer + 1 === question.correctAnswer) {
             currentScore += question.score;
         }
     });
@@ -127,7 +148,7 @@ function updateScore() {
 }
 
 function updateTimer() {
-    if (!timerElement) return; // Guard clause for missing element
+    if (!timerElement) return;
     
     const now = new Date();
     const diff = Math.floor((now - startTime) / 1000);
@@ -149,9 +170,77 @@ nextBtn?.addEventListener('click', () => {
     }
 });
 
+// Initialize questions from external file
+function loadQuestionsFromExternalFile() {
+    logDebug('Loading questions from external file');
+    
+    // Check if questions are already loaded from the external file
+    if (typeof window.questions !== 'undefined' && window.questions.length > 0) {
+        questions = window.questions;
+        logDebug(`Loaded ${questions.length} questions from global scope`);
+        return true;
+    }
+    
+    // If not in global scope, try to load via localStorage as fallback
+    const savedQuestions = localStorage.getItem('examQuestions');
+    if (savedQuestions) {
+        try {
+            questions = JSON.parse(savedQuestions);
+            logDebug(`Loaded ${questions.length} questions from localStorage`);
+            return true;
+        } catch (e) {
+            logDebug(`Error parsing questions from localStorage: ${e.message}`);
+        }
+    }
+    
+    logDebug('Failed to load questions');
+    return false;
+}
+
+function getQuestion(index) {
+    if (!questions || questions.length === 0) {
+        loadQuestionsFromExternalFile();
+    }
+    
+    if (!questions || !questions[index]) {
+        logDebug(`Question not found at index ${index}`);
+        return null;
+    }
+    
+    return questions[index];
+}
+
+function getTotalQuestions() {
+    if (!questions || questions.length === 0) {
+        loadQuestionsFromExternalFile();
+    }
+    
+    return questions ? questions.length : 0;
+}
+
+function getMaxScore() {
+    if (!questions || questions.length === 0) {
+        loadQuestionsFromExternalFile();
+    }
+    
+    return questions ? questions.reduce((total, q) => total + (q.score || 1), 0) : 0;
+}
+
 function initializeExam() {
+    logDebug('Initializing exam');
+    
+    // Load questions first
+    if (!loadQuestionsFromExternalFile()) {
+        logDebug('Failed to load questions, displaying error message');
+        if (questionText) {
+            questionText.textContent = "خطأ في تحميل الأسئلة. يرجى تحديث الصفحة.";
+        }
+        return;
+    }
+    
     // Initialize the answers array with the correct length
     answers = new Array(getTotalQuestions()).fill(null);
+    logDebug(`Initialized answers array with ${answers.length} slots`);
     
     const now = new Date();
     if (examDate) {
@@ -168,6 +257,8 @@ function initializeExam() {
     initializeQuestionGrid();
     displayQuestion();
     updateScore();
+    
+    logDebug('Exam initialization complete');
 }
 
 // Make sure the DOM is fully loaded before initializing
