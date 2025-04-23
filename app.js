@@ -13,6 +13,7 @@ const examDate = document.getElementById('exam-date');
 const timerElement = document.getElementById('timer');
 const scoreElement = document.getElementById('score');
 const statusIndicator = document.getElementById('status-indicator');
+const loadingIndicator = document.getElementById('loading-indicator');
 
 // Log for debugging
 function logDebug(message) {
@@ -259,9 +260,8 @@ function initializeExam() {
     updateScore();
     
     // Hide loading indicator
-    const loadingIndicator = document.getElementById('loading-indicator');
     if (loadingIndicator) {
-        loadingIndicator.classList.add('hidden');
+        loadingIndicator.style.display = 'none';
     }
     
     logDebug('Exam initialization complete');

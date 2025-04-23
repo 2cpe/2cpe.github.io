@@ -291,7 +291,6 @@ header h1 {
 
 /* Loading Indicator */
 .loading-indicator {
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
