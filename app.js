@@ -258,6 +258,12 @@ function initializeExam() {
     displayQuestion();
     updateScore();
     
+    // Hide loading indicator
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+        loadingIndicator.classList.add('hidden');
+    }
+    
     logDebug('Exam initialization complete');
 }
 
