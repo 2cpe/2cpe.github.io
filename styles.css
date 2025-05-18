@@ -310,6 +310,90 @@ header h1 {
     display: none;
 }
 
+/* Matching Question Styles */
+.matching-container {
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.matching-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.matching-table th {
+    padding: 10px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.matching-table th:first-child {
+    color: #43a047;
+}
+
+.matching-table th:nth-child(2) {
+    color: #d32f2f;
+    text-align: center;
+}
+
+.matching-table th:last-child {
+    color: #1976d2;
+}
+
+.matching-table tr {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.term-cell {
+    padding: 15px;
+    background-color: #f0f8ff;
+    border-radius: 0 8px 8px 0;
+    border-right: 4px solid #1976d2;
+    font-weight: 600;
+    color: #1976d2;
+    width: 40%;
+}
+
+.definition-cell {
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px 0 0 8px;
+    border-right: 4px solid #43a047;
+    width: 40%;
+}
+
+.select-definition {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.select-definition:hover, .select-definition:focus {
+    border-color: #1976d2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.select-definition option {
+    padding: 8px;
+}
+
+.matching-question {
+    min-height: 300px;
+}
+
 @media (max-width: 768px) {
     .exam-container {
         flex-direction: column;
@@ -368,6 +452,21 @@ header h1 {
     .question-status {
         width: 100%;
         text-align: center;
+    }
+    
+    .matching-table th {
+        font-size: 0.9rem;
+        padding: 8px;
+    }
+    
+    .term-cell, .definition-cell {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .select-definition {
+        padding: 6px 10px;
+        font-size: 0.8rem;
     }
 }
 

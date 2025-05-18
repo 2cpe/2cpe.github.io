@@ -95,23 +95,210 @@ function displayQuestion() {
     currentQuestionSpan.textContent = currentQuestionIndex + 1;
     
     optionsContainer.innerHTML = '';
-    question.options.forEach((option, index) => {
-        const optionElement = document.createElement('div');
-        optionElement.className = 'option';
-        if (answers[currentQuestionIndex] === index) {
-            optionElement.classList.add('selected');
-        }
-        optionElement.textContent = option;
-        optionElement.addEventListener('click', () => selectOption(index));
-        optionsContainer.appendChild(optionElement);
-    });
+    
+    // Check if this is the matching question (question with صل بين المصطلحات)
+    if (question.question.includes('صل بين المصطلحات')) {
+        // Special handling for matching question
+        displayMatchingQuestion(question);
+    } else {
+        // Regular question display
+        question.options.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'option';
+            if (answers[currentQuestionIndex] === index) {
+                optionElement.classList.add('selected');
+            }
+            optionElement.textContent = option;
+            optionElement.addEventListener('click', () => selectOption(index));
+            optionsContainer.appendChild(optionElement);
+        });
+    }
     
     updateNavButtons();
     updateQuestionGrid();
     updateStatus();
 }
 
+function displayMatchingQuestion(question) {
+    // Create a matching interface
+    const matchingContainer = document.createElement('div');
+    matchingContainer.className = 'matching-container';
+    
+    // Extract terms and definitions from the options
+    const options = question.options;
+    
+    // Create arrays to store terms and definitions
+    const terms = [];
+    const definitions = [];
+    
+    // Parse options to extract terms and definitions
+    options.forEach(option => {
+        // Split at the colon to separate term from definition
+        const colonIndex = option.indexOf(':');
+        if (colonIndex !== -1) {
+            const term = option.substring(0, colonIndex).trim();
+            const definition = option.substring(colonIndex + 1).trim();
+            terms.push(term);
+            definitions.push(definition);
+        }
+    });
+    
+    // Create table layout for matching
+    const table = document.createElement('table');
+    table.className = 'matching-table';
+    table.style.width = '100%';
+    table.style.borderCollapse = 'separate';
+    table.style.borderSpacing = '0 10px';
+    
+    // Create header row
+    const headerRow = document.createElement('tr');
+    
+    const defHeader = document.createElement('th');
+    defHeader.textContent = 'التعريف';
+    defHeader.style.padding = '10px';
+    defHeader.style.textAlign = 'right';
+    defHeader.style.color = '#43a047';
+    defHeader.style.fontWeight = 'bold';
+    defHeader.style.fontSize = '1.1rem';
+    defHeader.style.width = '40%';
+    
+    const matchHeader = document.createElement('th');
+    matchHeader.textContent = 'اختر';
+    matchHeader.style.padding = '10px';
+    matchHeader.style.textAlign = 'center';
+    matchHeader.style.color = '#d32f2f';
+    matchHeader.style.fontWeight = 'bold';
+    matchHeader.style.fontSize = '1.1rem';
+    matchHeader.style.width = '20%';
+    
+    const termHeader = document.createElement('th');
+    termHeader.textContent = 'المصطلح';
+    termHeader.style.padding = '10px';
+    termHeader.style.textAlign = 'right';
+    termHeader.style.color = '#1976d2';
+    termHeader.style.fontWeight = 'bold';
+    termHeader.style.fontSize = '1.1rem';
+    termHeader.style.width = '40%';
+    
+    headerRow.appendChild(defHeader);
+    headerRow.appendChild(matchHeader);
+    headerRow.appendChild(termHeader);
+    table.appendChild(headerRow);
+    
+    // Create rows for each term-definition pair
+    terms.forEach((term, termIndex) => {
+        const row = document.createElement('tr');
+        row.style.backgroundColor = '#f8f9fa';
+        row.style.borderRadius = '8px';
+        row.style.marginBottom = '10px';
+        
+        const termCell = document.createElement('td');
+        termCell.className = 'term-cell';
+        termCell.textContent = term;
+        termCell.style.padding = '15px';
+        termCell.style.backgroundColor = '#f0f8ff';
+        termCell.style.borderRadius = '0 8px 8px 0';
+        termCell.style.borderRight = '4px solid #1976d2';
+        termCell.style.fontWeight = '600';
+        termCell.style.color = '#1976d2';
+        
+        const matchCell = document.createElement('td');
+        matchCell.style.textAlign = 'center';
+        matchCell.style.padding = '10px';
+        matchCell.style.backgroundColor = '#fff';
+        
+        const defCell = document.createElement('td');
+        defCell.className = 'definition-cell';
+        defCell.style.padding = '15px';
+        defCell.style.backgroundColor = '#f5f5f5';
+        defCell.style.borderRadius = '8px 0 0 8px';
+        defCell.style.borderRight = '4px solid #43a047';
+        
+        // Get the correct definition for this term
+        if (termIndex < definitions.length) {
+            defCell.textContent = definitions[termIndex];
+        }
+        
+        // Create dropdown select menu
+        const selectElement = document.createElement('select');
+        selectElement.className = 'select-definition custom-select';
+        selectElement.id = `match-select-${termIndex}`;
+        selectElement.name = `match-select-${termIndex}`;
+        selectElement.style.width = '100%';
+        selectElement.style.padding = '8px';
+        selectElement.style.borderRadius = '4px';
+        selectElement.style.border = '1px solid #ddd';
+        selectElement.style.backgroundColor = '#fff';
+        selectElement.style.cursor = 'pointer';
+        
+        // Add default option
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "إختر...";
+        selectElement.appendChild(defaultOption);
+        
+        // Add all definitions as options
+        definitions.forEach((definition, defIndex) => {
+            const option = document.createElement('option');
+            option.value = defIndex.toString();
+            option.textContent = definition;
+            selectElement.appendChild(option);
+            
+            // If there's a saved answer for this matching question
+            if (answers[currentQuestionIndex] && 
+                answers[currentQuestionIndex][termIndex] === defIndex) {
+                option.selected = true;
+            }
+        });
+        
+        // Add change event listener
+        selectElement.addEventListener('change', (e) => {
+            const defIndex = parseInt(e.target.value);
+            
+            // Save the match in the answers object
+            if (!answers[currentQuestionIndex]) {
+                answers[currentQuestionIndex] = {};
+            }
+            
+            if (e.target.value === "") {
+                // If default "choose" option is selected, remove the answer
+                delete answers[currentQuestionIndex][termIndex];
+            } else {
+                // Save the selection
+                answers[currentQuestionIndex][termIndex] = defIndex;
+            }
+            
+            updateQuestionGrid();
+            updateScore();
+            updateStatus();
+        });
+        
+        matchCell.appendChild(selectElement);
+        
+        row.appendChild(defCell);
+        row.appendChild(matchCell);
+        row.appendChild(termCell);
+        table.appendChild(row);
+    });
+    
+    matchingContainer.appendChild(table);
+    optionsContainer.appendChild(matchingContainer);
+    
+    // Add a special class to the options container for styling
+    optionsContainer.classList.add('matching-question');
+}
+
 function selectOption(index) {
+    const question = getQuestion(currentQuestionIndex);
+    
+    // Handle matching question differently
+    if (question.question.includes('صل بين المصطلحات')) {
+        // Don't do standard option selection for matching questions
+        // The selection is handled in the displayMatchingQuestion function
+        return;
+    }
+    
+    // Regular option selection for standard questions
     answers[currentQuestionIndex] = index;
     const options = document.querySelectorAll('.option');
     options.forEach(option => option.classList.remove('selected'));
@@ -141,12 +328,43 @@ function updateStatus() {
     
     const answer = answers[currentQuestionIndex];
     
-    if (answer === null || answer === undefined) {
-        statusIndicator.textContent = 'لم تتم الإجابة';
-    } else if (answer + 1 === question.correctAnswer) {
-        statusIndicator.textContent = 'إجابة صحيحة';
+    if (question.question.includes('صل بين المصطلحات')) {
+        // For matching question
+        if (!answer || Object.keys(answer).length === 0) {
+            statusIndicator.textContent = 'لم تتم الإجابة';
+        } else {
+            let allCorrect = true;
+            
+            // Check if all matches are correct
+            for (const termIndex in answer) {
+                const defIndex = answer[termIndex];
+                if (parseInt(termIndex) !== defIndex) {
+                    allCorrect = false;
+                    break;
+                }
+            }
+            
+            // Check if all terms have a match
+            const expectedTerms = question.options.length;
+            const matchedTerms = Object.keys(answer).length;
+            
+            if (allCorrect && expectedTerms === matchedTerms) {
+                statusIndicator.textContent = 'إجابة صحيحة';
+            } else if (matchedTerms < expectedTerms) {
+                statusIndicator.textContent = 'إجابة غير مكتملة';
+            } else {
+                statusIndicator.textContent = 'إجابة خاطئة';
+            }
+        }
     } else {
-        statusIndicator.textContent = 'إجابة خاطئة';
+        // Regular question status
+        if (answer === null || answer === undefined) {
+            statusIndicator.textContent = 'لم تتم الإجابة';
+        } else if (answer + 1 === question.correctAnswer) {
+            statusIndicator.textContent = 'إجابة صحيحة';
+        } else {
+            statusIndicator.textContent = 'إجابة خاطئة';
+        }
     }
 }
 
@@ -158,8 +376,35 @@ function updateScore() {
     
     answers.forEach((answer, index) => {
         const question = getQuestion(index);
-        if (question && answer !== null && answer !== undefined && answer + 1 === question.correctAnswer) {
-            currentScore += question.score;
+        if (!question) return;
+        
+        if (question.question.includes('صل بين المصطلحات')) {
+            // For matching question
+            if (answer && typeof answer === 'object') {
+                let allCorrect = true;
+                
+                // Check if all matches are correct
+                for (const termIndex in answer) {
+                    const defIndex = answer[termIndex];
+                    if (parseInt(termIndex) !== defIndex) {
+                        allCorrect = false;
+                        break;
+                    }
+                }
+                
+                // Check if all terms have a match
+                const expectedTerms = question.options.length;
+                const matchedTerms = Object.keys(answer).length;
+                
+                if (allCorrect && expectedTerms === matchedTerms) {
+                    currentScore += question.score;
+                }
+            }
+        } else {
+            // Regular question scoring
+            if (answer !== null && answer !== undefined && answer + 1 === question.correctAnswer) {
+                currentScore += question.score;
+            }
         }
     });
     
