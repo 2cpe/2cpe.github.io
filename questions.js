@@ -3,227 +3,514 @@
     // Original questions array
     const questions = [
         {
-            question: "العلامة التجارية عادة ما تكون كلمة، أو اسما ، أو عبارة، أو شعارا ، أو رمزا ، أو تصميما ، أو صورة أو بعض هذه العناصر مجتمعة",
+            question: "He is a teacher.",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/this is a teacher.png"
         },
         {
-            question: "حضور المعارض التجارية ذات العلاقة بمشروعك أو فكرتك سيمكنك من الاتصال بالأشخاص الذين يشبهونك في التفكير",
-            options: ["صح", "خطأ"],
+            question: "He___to Jeddah yesterday.",
+            options: ["went", "gone", "go"],
             correctAnswer: 1,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "أحد هذه العناصر ليس من سمات رائد الأعمال:",
-            options: ["التمتع بالثقة", "الإقناع", "تعدد الاهتمامات", "الحماس"],
+            question: "I____ all my data.",
+            options: ["has lost", "have losen", "have lost"],
             correctAnswer: 3,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "المهارات الرئيسة لرائد الأعمال هي المهارات الإدراكية، والإنسانية، والفنية.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 1.00
-        },
-        {
-            question: "تعتبر خدمات الصيرفة الإلكترونية نوع ا من أنواع الابتكار في مجال:",
-            options: ["نموذج الأعمال", "المنتجات", "الخدمات", "العمليات"],
+            question: "In 2000, the first crew___ the International Space Station.",
+            options: ["enter", "enters", "entered"],
             correctAnswer: 3,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "صل بين المصطلحات ومايقابلها من تعريفات:",
-            options: [
-                "الطلاقة: هي القدرة على الانتاج عدد كبير من الافكار هي فترة زمنية محددة وبطرق مختلفة.",
-                "الابداع هو: عملية فكرية ذهنية تؤدي إلى انتاج الحلول أو الأفكار أو الطرق العملية والنظرية التي تكون جديدة وفريدة",
-                "التمويل الجماعي: هي منصات على الانترنت لجمع مبالغ صغيرة من رأس المال من عدد كبير من الأفراد لتمويل مشروع تجاري جديد.",
-                "شركات رأس المال الجريء: هي شركات تقوم بتمويل المشروع بمبدأ المشاركة وليس الإقراض، وبذلك فهي تخاطر بأموالها، وتتوقع من المشاركة عوائد مستقبلية أكبر عند بيع حصصها في الشركة.",
-                "حاضنات الاعمال: هي مؤسسات تهدف إلى توفير احتياجات المشروعات الصغيره والمتوسطة في ايامها الأولى عن طريق استضافة المشروع في مراحلة التاسيسية إلى أن يصل المشروع إلى مرحلة النضج.",
-                "منظومة ريادة الأعمال: هي الأفراد والمنظمات و الجهات المحيطة برائد الأعمال والتي تعين أو تعيق توجه الفرد نحو ريادة الأعمال."
-            ],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "هو عبارة عن أسلوب يقوم بتمويل المشروع بمبدأ المشاركة وليس الإقراض ويقبل المخاطرة.",
-            options: ["رأس المال الجريء", "رأس المال التنظيمي", "رأس المال التقليدي", "رأس المال البشرى"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "خطوات تحويل الفكرة إلى فرصة هي: توليد الفكرة، صياغة الفكرة، تسويق الفكرة، تمويل الفكرة.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "…. عباره عن أسلوب يقوم بتمويل المشروع بمبدأ المشاركة و ليس الإقتراص و يقبل المخاطرة:",
-            options: ["رأس المال التقليدي", "رأس المال الجرئ", "رأس المال التنظيمي"],
-            correctAnswer: 2,
-            score: 1.00
-        },
-        {
-            question: "حتى تستطيع أن تكون رائد أعما ل ناجح فيجب أن تكون لديك القدرة على:",
-            options: ["البحث عن الأفكار الجديدة", "التفكير بطريقة تقليدية", "تكرار الأعمال نفسها", "تقليد الآخرين"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "هو عبارة عن أسلوب يقوم بتمويل المشروع بمبدأ المشاركة وليس الإقراض ويقبل المخاطرة.",
-            options: ["رأس المال التقليدي", "رأس المال البشرى", "رأس المال الجريء", "رأس المال التنظيمي"],
+            question: "In 2001, the first space tourist ___ into space.",
+            options: ["fly", "flown", "flew"],
             correctAnswer: 3,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "هو عبارة عن أسلوب يقوم بتمويل المشروع بمبدأ المشاركة وليس الإقراض ويقبل المخاطرة.",
-            options: ["رأس المال الجريء", "رأس المال البشرى", "رأس المال التقليدي", "رأس المال التنظيمي"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "الفرق بين الاختراع والابتكار أ ن الاختراع هو الإتيان بشيء جديد لم يُسبق إليه، أما الابتكار فهو تحويل ذلك الشيء أو تلك الفكرة إلى عمليات أو منتجات جديدة لها تأثير اقتصادي",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "يقتصر الإبداع على الأذكياء فقط.",
-            options: ["صح", "خطأ"],
+            question: "I______ an accident.",
+            options: ["had have", "have had", "has have"],
             correctAnswer: 2,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "العقلية الريادية هي القدرة على تحديد الفرص وتحويلها إلى مشاريع تخلق قيمة للعملاء.",
-            options: ["صح", "خطأ"],
+            question: "I_____ my car into a bridge.",
+            options: ["have driven", "has driven", "has drove"],
             correctAnswer: 1,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "المشروعات الصغيرة تركز على الابتكار أكثر من ريادة الأعمال",
-            options: ["صح", "خطأ"],
+            question: "I____the new customer.",
+            options: ["have phoned", "have phone", "has phoned"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "Leonove___the fisrt walk in space in 1965.",
+            options: ["make", "made", "makes"],
             correctAnswer: 2,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "من بين السمات التي يجب أن تتوافر في رائد الأعمال:",
-            options: ["عدم القدرة على الإقناع", "عدم الثقة بالنفس", "الخوف من الفشل", "أ ن لا يخشى الفشل"],
-            correctAnswer: 4,
-            score: 1.00
-        },
-        {
-            question: "منظومة ريادة الأعمال: هي الأفراد، والمنظمات، والجهات المحيطة برائد الأعمال، والتي تعين أو تعيق توجه الفرد نحو ريادة الأعمال.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "إذا كنت ترغب في نجاح مشروعك الريادي وتقليل احتمالية فشله فيجب عليك أن تعمل:",
-            options: ["وفقا لخطة أعمال جيدة خاصة بمشروعك", "وفقا لخطة مشروع آخر مماثل", "أن تعمل بطريقة غير مخططة", "تقليد الآخرين في طريقة عملهم"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "…… من عوامل نجاح العروض المرئية :",
-            options: ["اختيار أحدث البرامج", "أختبار احدث برامج العرض المعقده", "اختيار برنامج العرض المناسب لما تقدمه،و ان تجيد التعامل معه"],
+            question: "My daughter _____ downstairs.",
+            options: ["have fallen", "has fall", "has fallen"],
             correctAnswer: 3,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "لا يعتبر مستقبل ريادة الأعمال مشرقا ومليئا بالفرص.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 1.00
-        },
-        {
-            question: "تهدف حاضنات الأعمال إلى تذليل المصاعب أمام مشروعات الشباب المتوسطة والصغيرة من خلال استضافة تلك المشروعات في :",
-            options: ["مرحلة التميز والتفوق", "مراحلها التأسيسية وترعاها حتى مرحلة النضج", "مرحلة النجاح والاستقرار", "مرحلة النضج والإنتاج"],
-            correctAnswer: 2,
-            score: 1.00
-        },
-        {
-            question: "من سمات الشخص المبدع أ نه دائما ما ينظر للأمور من وجهة نظر مختلفة عن الطريقة العادية التي يفكر بها الآخرون",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "….. هي النشاط الذي ينصب على إنشاء عمل مبدع و يقدم فعالية اقتصاديه مضافة :",
-            options: ["تنظيم الاعمال", "ريادة الاعمال", "إدارة الاعمال"],
-            correctAnswer: 2,
-            score: 1.00
-        },
-        {
-            question: "…… من النصائح التي يجب العمل بها لتقديم عرض ناجح :",
-            options: ["السماح لمخاوفك بالتأثير عليك أثناء العرض", "التحضير و التدريب الجيد على العرض", "استخدام لغة و ألفاظ جديده"],
-            correctAnswer: 2,
-            score: 1.00
-        },
-        {
-            question: "تعتبر خدمات الصيرفة الإلكترونية نوع ا من أنواع الابتكار في مجال:",
-            options: ["الخدمات", "نموذج الأعمال", "المنتجات", "العمليات"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "عتمد نجاح العرض على شخصية العارض، و التي تتمثل فيما يلي :",
-            options: ["نبرة الصوت المناسبة", "المظهر و لغة الجسد", "لغة الجسد و نبرة الصوت و لغة التحدث"],
+            question: "NASA____the Hubble Telescope into space in 1990.",
+            options: ["send", "sended", "sent"],
             correctAnswer: 3,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "منظومة ريادة الأعمال: هي الأفراد، والمنظمات، والجهات المحيطة برائد الأعمال، والتي تعين أو تعيق توجه الفرد نحو ريادة الأعمال.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "المهارات الإدراكية هي القدرة على إنجاز العمل مع الآخرين كأفراد وكمجموعات. ويتضمن ذلك مهارات التعاون مع الآخرين والتعامل معهم",
-            options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 1.00
-        },
-        {
-            question: "…. عباره عن أسلوب يقوم بتمويل المشروع بمبدأ المشاركة و ليس الإقتراص و يقبل المخاطرة:",
-            options: ["رأس المال التنظيمي", "رأس المال التقليدي", "رأس المال الجرئ"],
+            question: "Sami _____ the tyres.",
+            options: ["have repaired", "has repair", "has repaired"],
             correctAnswer: 3,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "تعتبر مرحلة .................... هي آخر مرحلة من مراحل العملية الابتكارية.",
-            options: ["الإعداد والتحفيز", "التحقق من صحة الفكرة", "تطوير الفكرة", "التعايش مع الفكرة"],
+            question: "Sara_____ her leg.",
+            options: ["have cuted", "has cutted", "has cut"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "Something ____ to my computer.",
+            options: ["have hapened", "has happened", "have happen"],
             correctAnswer: 2,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "الذكاء الاصطناعي هو سلوك وخصائص معينة تتسم بها البرامج الحاسوبية، تجعلها تحاكي القدرات الذهنية البشرية",
+            question: "The Americans___the first shuttle into space in 1981.",
+            options: ["put", "puted", "puts"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "The first men , Armstrong and Aldrin_____on the moon in 1969.",
+            options: ["land", "landed", "landing"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "The Russians____ Sputink , the first satelite on the 5th of October 157.",
+            options: ["launch", "launchd", "lauched"],
+            correctAnswer: 3,
+            score: 0.00
+        },
+        {
+            question: "Thieves ____ into my office.",
+            options: ["have broken", "has broke", "have broke"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "When did she _____there?",
+            options: ["travels", "travel", "travelled"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "Yuri Gagarin___the first man in space in 1961.",
+            options: ["became", "become", "becomed"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "Did you go to the cinema yesterday?",
+            options: ["b. Yes, I did.", "a. Yes, I do.", "c. Yes, I have."],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "Do not ……….food or drink into the workshop.",
+            options: ["a. sell", "c. bring", "b. buy"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "………………..do you need? 10 mil.",
+            options: ["c. What kind", "b. What color", "a. What size"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "………………..go through that door!",
+            options: ["b. Don't", "a. Mustn't", "d. Might not"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "Have you checked the brakes?",
+            options: ["a. Yes, I did.", "b. Yes, I had.", "c. Yes, I have."],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "Hello. Do you have ………….screws?",
+            options: ["b. any", "c. many", "a. much"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "How …………….bags do you need? Fifty, please.",
+            options: ["b. many", "a. much"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "How high is it?",
+            options: ["c. It's 336.4 meters above the river.", "a. It's Millaw Bridge.", "b. It's in the south of France."],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "If the light is off , .................................",
+            options: ["b. take it out", "a. drive away", "c. press the power button"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "'Do this', 'Always do this', 'You must do this' are used in ………………..signs.",
+            options: ["c. mandatory", "a. warning", "b. prohibition"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "'Watch out! You might burn your hand.' This is a …………….",
+            options: ["b. a mandatory sign", "c. a warning sign", "a. a prohibition sign"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "……………….smoke in the workshop.",
+            options: ["a. Always", "b. Anytime", "c. Don't"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "The airboard moves on a …………….of air.",
+            options: ["c. bed", "a. pillow", "b. cushion"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "The engine of the airboard ……..the fan.",
+            options: ["a. steers", "b. drives", "c. cools"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "The …………….of the road is 6 m.",
+            options: ["b. width", "a. wide", "c. widen"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "The sea has a ………………of 330 m.",
+            options: ["a. deep", "b. depth"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "What's it called?",
+            options: ["c. It's 336.4 m", "b. It's in the south of France.", "a. It's Millaw Bridge."],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "When ……….it land on the moon? In October 1981.",
+            options: ["c. do", "b. does", "a. did"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "Will the tube use electricity?",
+            options: ["b. No, it isn't.", "a. No, it doesn't.", "c. No, it won't."],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "You …………..wear a hard hat on the building site.",
+            options: ["a. must", "b. might", "c. don't"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "This sign orders you to______.",
+            options: ["use the guard on the saw", "never use the guard on the saw", "wear safety boots"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/This sign orders you to______.png"
+        },
+        {
+            question: "This signs says________",
+            options: ["fire", "warning . Poison", "wash your hand"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/This signs says________.png"
+        },
+        {
+            question: "This sign warns by saying______.",
+            options: ["circualr saw", "fire hazard", "the machine is hot"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/This sign warns by saying______.png"
+        },
+        {
+            question: "How much milk do you need?",
             options: ["صح", "خطأ"],
             correctAnswer: 1,
-            score: 1.00
+            score: 0.25
         },
         {
-            question: "تحديد الغرض من العرض التقديمي هو أولى خطوات تصميم و كتابة العرض التقديمي:",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "هناك طرق عديدة تقود رائد الأعمال لتحويل الفكرة إلى فرصة",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "من عوامل النجاح لريادة الأعمال: تمكين الخريجين من امتلاك أفكار مشروعات أعمال تجارية ذات التقنية الحديثة",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 1.00
-        },
-        {
-            question: "الأستعجال و السرعه في العرض، تؤدي إلى جذب الانتباه و قدرة الحضور على الاستيعاب الكافي للعرض:",
+            question: "I have one cement.",
             options: ["صح", "خطأ"],
             correctAnswer: 2,
-            score: 1.00
+            score: 0.25
+        },
+        {
+            question: "The body supports the rider.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "The opposite of ( downwards) is upwards.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "They won't built it until 2050.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "Always read the ____ before you service this machine.",
+            options: ["headlines", "maual", "story"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/Always read the ____ before you service this machine.png"
+        },
+        {
+            question: "There___ some bricks ion the floor.",
+            options: ["am", "are", "is"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "The water_____ very hot.",
+            options: ["am", "is", "are"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "You could ___ an electric shook.",
+            options: ["gets", "getting", "get"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "You might____ your hands.",
+            options: ["burning", "burns", "burn"],
+            correctAnswer: 3,
+            score: 0.25
+        },
+        {
+            question: "Do not smoke here.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "This sign warns you \" You could trap your hand in the gears.\"",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/This sign warns you  You could trap your hand in the gears.png"
+        },
+        {
+            question: "You could injure your eyes.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "You mustn't use your mobile phone here.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/You mustn't use your mobile phone here..png"
+        },
+        {
+            question: "You must wear safety gloves in the factory.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "Do you need some screws?",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "Do___live near here?",
+            options: ["Sami", "you", "Sara"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "What does it ___?",
+            options: ["doing", "do", "does"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "Does the fan cools the engine?",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25
+        },
+        {
+            question: "The engine drives the fan.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "What does the engine do?",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25
+        },
+        {
+            question: "This is a book.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/thisisabook.png"
+        },
+        {
+            question: "This is a skyscraper.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/thisisaskyscraper.png"
+        },
+        {
+            question: "This is a tube.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/This is a tube.png"
+        },
+        {
+            question: "It is a hard hat.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/It is a hard hat.png"
+        },
+        {
+            question: "It is a jacket.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/It is a jacket.png"
+        },
+        {
+            question: "The insulation of the cable is dented.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/this insulation of the cable is dented.png"
+        },
+        {
+            question: "The lenses of the googles are scratched.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/The lenses of the googles are scratched..jpg"
+        },
+        {
+            question: "The pipe below the tanks is bent.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/The pipe below the tanks is bent.png"
+        },
+        {
+            question: "These are called bricks.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/These are called  bricks.png"
+        },
+        {
+            question: "The side of the box is dented.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/box is dented.png"
+        },
+        {
+            question: "The surface of the road is cracked.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/The surface of the road is cracked.png"
+        },
+        {
+            question: "This is a nail.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/This is a nail.png"
+        },
+        {
+            question: "This is called scaffolding.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/This is called scaffolding.png"
+        },
+        {
+            question: "This machine is called a digger.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/This machine is called a digger.png"
+        },
+        {
+            question: "This part is called a bonnet.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/This part is called a bonnet.png"
+        },
+        {
+            question: "This part of the car is called a bumper.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 0.25,
+            image: "images/This part of the car is called a bumper.png"
+        },
+        {
+            question: "Watch out! You might burn your hand.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 0.25,
+            image: "images/Watch out! You might burn your hand.png"
         }
     ];
     // Make questions available globally
