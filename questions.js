@@ -2,515 +2,312 @@
 (function(global) {
     // Original questions array
     const questions = [
+        // Set 1
         {
-            question: "He is a teacher.",
+            question: "لا يعد اضطراب الأفكار من مشكلات الكتابة .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/this is a teacher.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "He___to Jeddah yesterday.",
-            options: ["went", "gone", "go"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "I____ all my data.",
-            options: ["has lost", "have losen", "have lost"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "In 2000, the first crew___ the International Space Station.",
-            options: ["enter", "enters", "entered"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "In 2001, the first space tourist ___ into space.",
-            options: ["fly", "flown", "flew"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "I______ an accident.",
-            options: ["had have", "have had", "has have"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "I_____ my car into a bridge.",
-            options: ["have driven", "has driven", "has drove"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "I____the new customer.",
-            options: ["have phoned", "have phone", "has phoned"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "Leonove___the fisrt walk in space in 1965.",
-            options: ["make", "made", "makes"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "My daughter _____ downstairs.",
-            options: ["have fallen", "has fall", "has fallen"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "NASA____the Hubble Telescope into space in 1990.",
-            options: ["send", "sended", "sent"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "Sami _____ the tyres.",
-            options: ["have repaired", "has repair", "has repaired"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "Sara_____ her leg.",
-            options: ["have cuted", "has cutted", "has cut"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "Something ____ to my computer.",
-            options: ["have hapened", "has happened", "have happen"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "The Americans___the first shuttle into space in 1981.",
-            options: ["put", "puted", "puts"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "The first men , Armstrong and Aldrin_____on the moon in 1969.",
-            options: ["land", "landed", "landing"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "The Russians____ Sputink , the first satelite on the 5th of October 157.",
-            options: ["launch", "launchd", "lauched"],
-            correctAnswer: 3,
-            score: 0.00
-        },
-        {
-            question: "Thieves ____ into my office.",
-            options: ["have broken", "has broke", "have broke"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "When did she _____there?",
-            options: ["travels", "travel", "travelled"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "Yuri Gagarin___the first man in space in 1961.",
-            options: ["became", "become", "becomed"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "Did you go to the cinema yesterday?",
-            options: ["b. Yes, I did.", "a. Yes, I do.", "c. Yes, I have."],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "Do not ……….food or drink into the workshop.",
-            options: ["a. sell", "c. bring", "b. buy"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "………………..do you need? 10 mil.",
-            options: ["c. What kind", "b. What color", "a. What size"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "………………..go through that door!",
-            options: ["b. Don't", "a. Mustn't", "d. Might not"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "Have you checked the brakes?",
-            options: ["a. Yes, I did.", "b. Yes, I had.", "c. Yes, I have."],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "Hello. Do you have ………….screws?",
-            options: ["b. any", "c. many", "a. much"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "How …………….bags do you need? Fifty, please.",
-            options: ["b. many", "a. much"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "How high is it?",
-            options: ["c. It's 336.4 meters above the river.", "a. It's Millaw Bridge.", "b. It's in the south of France."],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "If the light is off , .................................",
-            options: ["b. take it out", "a. drive away", "c. press the power button"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "'Do this', 'Always do this', 'You must do this' are used in ………………..signs.",
-            options: ["c. mandatory", "a. warning", "b. prohibition"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "'Watch out! You might burn your hand.' This is a …………….",
-            options: ["b. a mandatory sign", "c. a warning sign", "a. a prohibition sign"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "……………….smoke in the workshop.",
-            options: ["a. Always", "b. Anytime", "c. Don't"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "The airboard moves on a …………….of air.",
-            options: ["c. bed", "a. pillow", "b. cushion"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "The engine of the airboard ……..the fan.",
-            options: ["a. steers", "b. drives", "c. cools"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "The …………….of the road is 6 m.",
-            options: ["b. width", "a. wide", "c. widen"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "The sea has a ………………of 330 m.",
-            options: ["a. deep", "b. depth"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "What's it called?",
-            options: ["c. It's 336.4 m", "b. It's in the south of France.", "a. It's Millaw Bridge."],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "When ……….it land on the moon? In October 1981.",
-            options: ["c. do", "b. does", "a. did"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "Will the tube use electricity?",
-            options: ["b. No, it isn't.", "a. No, it doesn't.", "c. No, it won't."],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "You …………..wear a hard hat on the building site.",
-            options: ["a. must", "b. might", "c. don't"],
-            correctAnswer: 1,
-            score: 0.25
-        },
-        {
-            question: "This sign orders you to______.",
-            options: ["use the guard on the saw", "never use the guard on the saw", "wear safety boots"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/This sign orders you to______.png"
-        },
-        {
-            question: "This signs says________",
-            options: ["fire", "warning . Poison", "wash your hand"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/This signs says________.png"
-        },
-        {
-            question: "This sign warns by saying______.",
-            options: ["circualr saw", "fire hazard", "the machine is hot"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/This sign warns by saying______.png"
-        },
-        {
-            question: "How much milk do you need?",
+            question: "يمكن اكتساب المهارة اللغوية بالتدرّب و الممارسة .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "I have one cement.",
+            question: "القراءة في اللغة :",
+            options: [
+                "تتبع الكلمات نظراً و الاستمتاع بها",
+                "تتبع الكلمات نظراً و نطقها",
+                "تتبع الكلمات نظراً و نقدها",
+                "تتبع الكلمات نظراً و الإفادة منها"
+            ],
+            correctAnswer: 2, // تتبع الكلمات نظراً و نطقها
+            score: 1.00
+        },
+        {
+            question: "المهارة في اللغة : الحذق و الإجادة .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "The body supports the rider.",
+            question: "واحدة مما يلي ليست دليلاً على أهمية الكتابة :",
+            options: [
+                "أنها ذاكرة للحضارات و الأمم",
+                "أنها قوام المعاملات في تنظيم الدول و المجتمعات",
+                "أنها عملية ذاتية فقط",
+                "أنها أداة من أدوات التعلم و المعرفة"
+            ],
+            correctAnswer: 3, // أنها عملية ذاتية فقط
+            score: 1.00
+        },
+        {
+            question: "من مستويات الاتصال بين المرسل و المتلقي : الاتصال النسبي ، وفيه يكون فهم الرسالة تاماً .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "The opposite of ( downwards) is upwards.",
+            question: "يجب على من يكتب كتابة وظيفية أن يختار الكلمات ذات المعنى المحدد الواضح .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "They won't built it until 2050.",
+            question: "للغة و ظائف فردية فقط .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "Always read the ____ before you service this machine.",
-            options: ["headlines", "maual", "story"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/Always read the ____ before you service this machine.png"
-        },
-        {
-            question: "There___ some bricks ion the floor.",
-            options: ["am", "are", "is"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "The water_____ very hot.",
-            options: ["am", "is", "are"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "You could ___ an electric shook.",
-            options: ["gets", "getting", "get"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "You might____ your hands.",
-            options: ["burning", "burns", "burn"],
-            correctAnswer: 3,
-            score: 0.25
-        },
-        {
-            question: "Do not smoke here.",
+            question: "تؤدي اللغة وظيفة مرجعية .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "This sign warns you \" You could trap your hand in the gears.\"",
+            question: "الكتابة في مجال الشِعر ، دليل على أهمية الكتابة ، فهي :",
+            options: [
+                "أداة الإبداع الأدبي",
+                "وسيلة للتوثيق و الحفظ",
+                "قوام المعاملات التي تنظم شؤون المجتمهات و الدول",
+                "وسيلة للتنفيس"
+            ],
+            correctAnswer: 1, // أداة الإبداع الأدبي
+            score: 1.00
+        },
+        {
+            question: "العلاقة بين التعريف اللغوى و التعريف الاصطلاحي للكتابة أنهما :",
+            options: [
+                "متضادان",
+                "مترابطان",
+                "لا جامع بينهما",
+                "متباعدان"
+            ],
+            correctAnswer: 2, // مترابطان
+            score: 1.00
+        },
+        {
+            question: "الكتابة الإبداعية لا تختلف فيها أساليب الكتّاب.",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/This sign warns you  You could trap your hand in the gears.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "You could injure your eyes.",
+            question: "ذكر إدوارد سابير في تعريفه للغة أنها : ( غير غريزية ) ، وهذا يعني عدم قدرة الفرد على تعلمها من المحيط الاجتماعي .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "You mustn't use your mobile phone here.",
+            question: "وظيفة اللغة التواصلية من أهم الوظائف الأساسية .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/You mustn't use your mobile phone here..png"
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "You must wear safety gloves in the factory.",
+            question: "بواسطة اللغة يتداول الناس الفكر .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "Do you need some screws?",
+            question: "( الرواية ) من أمثلة الكتابة الإبداعية .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "Do___live near here?",
-            options: ["Sami", "you", "Sara"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "What does it ___?",
-            options: ["doing", "do", "does"],
-            correctAnswer: 2,
-            score: 0.25
-        },
-        {
-            question: "Does the fan cools the engine?",
+            question: "من خصائص القراءة الصامتة أنها : تبدد الوقت بلا فائدة.",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "The engine drives the fan.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            question: "في كتابة التاريخ دليل على أهمية الكتابة إذ هي :",
+            options: [
+                "ذاكرة الأمة",
+                "وسيلة تنفيس",
+                "أداة لتنظيم الدولة و المجتمع",
+                "أداة الإبداع الأدبي"
+            ],
+            correctAnswer: 1, // ذاكرة الأمة
+            score: 1.00
         },
         {
-            question: "What does the engine do?",
+            question: "للغة وظائف اجتماعية .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "This is a book.",
+            question: "من معاني ( الكتابة ) في اللغة :",
+            options: [
+                "الحاجة و العون",
+                "القضاء و الإلزام",
+                "التقليل و التكثير",
+                "الحل و البسط"
+            ],
+            correctAnswer: 2, // القضاء و الإلزام
+            score: 1.00
+        },
+        // Set 2
+        {
+            question: "بواسطة اللغة يتداول الناس الفكر .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/thisisabook.png"
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "This is a skyscraper.",
+            question: "المهارة اللغوة : أداء لغوي يتميز بالوضوح و الدقة و الترابط و المرونة بأسلوب جميل وصياغة حسنة .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/thisisaskyscraper.png"
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "This is a tube.",
+            question: "المهارة في الاصطلاح : قدرة الإنسان على القيام بعمل ما بسرعة بلا إتقان .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/This is a tube.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "It is a hard hat.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/It is a hard hat.png"
+            question: "واحد مما يلي ليست من أركان الموقف اللغوي :",
+            options: [
+                "المرسل",
+                "المستقبل",
+                "القراءة",
+                "الوسيلة أو الأداة"
+            ],
+            correctAnswer: 3, // القراءة
+            score: 1.00
         },
         {
-            question: "It is a jacket.",
+            question: "من خصائص القراءة الصامتة أنها : عالية التركيز .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/It is a jacket.png"
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "The insulation of the cable is dented.",
+            question: "لا يجب على الكاتب تحديد نوع كتابته و أسلوبها قبل البدء في عملية الكتابة .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/this insulation of the cable is dented.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "The lenses of the googles are scratched.",
+            question: "تعتمد الكتابة الإبداعية علي الخيال و التصوير البياني .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/The lenses of the googles are scratched..jpg"
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "The pipe below the tanks is bent.",
+            question: "من مستويات الاتصال بين المرسل و المتلقي : الاتصال النسبي ، وفيه يكون فهم الرسالة جزئياً .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/The pipe below the tanks is bent.png"
+            correctAnswer: 1, // صح
+            score: 1.00
         },
         {
-            question: "These are called bricks.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/These are called  bricks.png"
+            question: "واحدة مما يلي من طبيعة عملية القراءة :",
+            options: [
+                "عملية نقدية",
+                "عملية نامية و متطورة",
+                "عملية مؤقتة",
+                "عملية تقنية"
+            ],
+            correctAnswer: 2, // عملية نامية و متطورة
+            score: 1.00
         },
         {
-            question: "The side of the box is dented.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/box is dented.png"
+            question: "واحدة مما يلي من طبيعة عملية القراءة :", // Note: Same question as above, different option order / correct answer
+            options: [
+                "عملية مؤقتة",
+                "عملية نقدية",
+                "عملية تقنية",
+                "عملية نامية و متطورة"
+            ],
+            correctAnswer: 4, // عملية نامية و متطورة
+            score: 1.00
         },
         {
-            question: "The surface of the road is cracked.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/The surface of the road is cracked.png"
+            question: "من معاني ( الكتابة ) في اللغة :", // Note: Similar to Q20 Set 1, different option order / correct answer
+            options: [
+                "الحل و البسط",
+                "الحاجة و العون",
+                "التقليل و التكثير",
+                "القضاء و الإلزام"
+            ],
+            correctAnswer: 4, // القضاء و الإلزام
+            score: 1.00
         },
         {
-            question: "This is a nail.",
+            question: "من خصائص القراءة الجهرية أنها : تعتمد على طبقة صوتية واحدة لا تتغير .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/This is a nail.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "This is called scaffolding.",
+            question: "لا يجب على الكاتب تحديد نوع كتابته و أسلوبها قبل البدء في عملية الكتابة .", // Note: Identical to Q6 Set 2
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/This is called scaffolding.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "This machine is called a digger.",
+            question: "الوظيفة التوجيهية للغة تعني : عدم قدرة اللغة على التأثير في سلوك الفرد و الجماعات .",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/This machine is called a digger.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "This part is called a bonnet.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/This part is called a bonnet.png"
+            question: "واحدة من الفقرات التالية ليست من أهداف القراءة :",
+            options: [
+                "تبديد الوقت",
+                "الترويح عن النفس",
+                "التعلم",
+                "التثقيف"
+            ],
+            correctAnswer: 1, // تبديد الوقت
+            score: 1.00
         },
         {
-            question: "This part of the car is called a bumper.",
+            question: "من مستويات الاتصال بين المرسل و المتلقي : تمام الانقطاع ، وفيه يكون فهم الرسالة كلياً .",
             options: ["صح", "خطأ"],
-            correctAnswer: 2,
-            score: 0.25,
-            image: "images/This part of the car is called a bumper.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
         },
         {
-            question: "Watch out! You might burn your hand.",
+            question: "ينبغي للمرسل في العملية التواصلية ألّا يكون :",
+            options: [
+                "حسن التعبير",
+                "ملماً بتفاصيل الرسالة",
+                "متجاهلاً لحالة المستقبل",
+                "واضحاً"
+            ],
+            correctAnswer: 3, // متجاهلاً لحالة المستقبل
+            score: 1.00
+        },
+        {
+            question: "من تعاريف اللغة أنها : ( وسيلة غير إنسانية ، غريزية ، تمكن الفرد من تبادل الأفكار و العواطف و الرغبات ).",
             options: ["صح", "خطأ"],
-            correctAnswer: 1,
-            score: 0.25,
-            image: "images/Watch out! You might burn your hand.png"
+            correctAnswer: 2, // خطأ
+            score: 1.00
+        },
+        {
+            question: "يجب على من يكتب كتابة وظيفية أن يختار الكلمات ذات المعنى المحدد الواضح .", // Note: Identical to Q7 Set 1
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+        {
+            question: "في قوله تعالى : [ يا أيها الذين آمنوا إذا تداينتم بدين إلى أجل مسمى فاكتبوه ] ، دليل على أهمية الكتابة إذ هي :",
+            options: [
+                "وسيلة لحفظ الحقوق و التوثيق",
+                "وسيلة للتواصل مع الطرف الآخر",
+                "وسيلة للتسلية",
+                "أداة للإبداع الأدبي"
+            ],
+            correctAnswer: 1, // وسيلة لحفظ الحقوق و التوثيق
+            score: 1.00
         }
     ];
     // Make questions available globally
