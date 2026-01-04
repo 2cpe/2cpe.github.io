@@ -486,4 +486,130 @@ header h1 {
     .info-item {
         font-size: 0.8rem;
     }
+}
+
+/* Code Block Styles */
+.question-title {
+    margin-bottom: 15px;
+    font-weight: 500;
+    font-size: 1.05rem;
+}
+
+.code-block-container {
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(145deg, #1e1e2e, #252535);
+    border: 1px solid #3d3d5c;
+}
+
+.code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    background: linear-gradient(135deg, #2d2d44, #1a1a2e);
+    border-bottom: 1px solid #3d3d5c;
+}
+
+.code-lang {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64d9ff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: rgba(100, 217, 255, 0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.code-block {
+    margin: 0;
+    padding: 18px 20px;
+    background: linear-gradient(180deg, #1e1e2e 0%, #16161e 100%);
+    overflow-x: auto;
+    direction: ltr;
+    text-align: left;
+}
+
+.code-block code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: #e4e4e7;
+    white-space: pre;
+    display: block;
+    tab-size: 4;
+}
+
+/* Scrollbar styling for code blocks */
+.code-block::-webkit-scrollbar {
+    height: 8px;
+}
+
+.code-block::-webkit-scrollbar-track {
+    background: #1a1a2e;
+    border-radius: 4px;
+}
+
+.code-block::-webkit-scrollbar-thumb {
+    background: #4a4a6a;
+    border-radius: 4px;
+}
+
+.code-block::-webkit-scrollbar-thumb:hover {
+    background: #5a5a7a;
+}
+
+/* PL/SQL Syntax Highlighting Colors (applied via CSS) */
+.language-plsql {
+    color: #e4e4e7;
+}
+
+/* Keywords highlighting effect via text-shadow for visual appeal */
+.code-block code::selection {
+    background-color: rgba(100, 217, 255, 0.3);
+}
+
+/* Option code styling */
+.option code, .option-code {
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    background-color: #f0f4f8;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    color: #1976d2;
+    border: 1px solid #e0e0e0;
+}
+
+/* Mobile responsive for code blocks */
+@media (max-width: 768px) {
+    .code-block-container {
+        margin: 10px 0;
+        border-radius: 6px;
+    }
+    
+    .code-block {
+        padding: 12px 15px;
+    }
+    
+    .code-block code {
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+    
+    .code-lang {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .code-block code {
+        font-size: 0.75rem;
+    }
+    
+    .code-block {
+        padding: 10px 12px;
+    }
 } 

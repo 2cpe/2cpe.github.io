@@ -26,7 +26,7 @@ function initializeQuestionGrid() {
         logDebug('Question grid not found');
         return;
     }
-    
+
     logDebug(`Initializing grid with ${getTotalQuestions()} questions`);
     for (let i = 0; i < getTotalQuestions(); i++) {
         const btn = document.createElement('button');
@@ -61,24 +61,47 @@ function displayQuestion() {
         logDebug('Missing DOM elements for question display');
         return;
     }
-    
+
     const question = getQuestion(currentQuestionIndex);
     if (!question) {
         logDebug(`Question not found for index ${currentQuestionIndex}`);
         questionText.textContent = "خطأ في تحميل السؤال";
         return;
     }
-    
+
     logDebug(`Displaying question ${currentQuestionIndex + 1}: ${question.question.substring(0, 20)}...`);
-    
+
     // Clear previous question content
     questionText.innerHTML = '';
-    
+
     // Add the question text
     const questionTextElement = document.createElement('div');
+    questionTextElement.className = 'question-title';
     questionTextElement.textContent = question.question;
     questionText.appendChild(questionTextElement);
-    
+
+    // Add code block if exists
+    if (question.code) {
+        const codeContainer = document.createElement('div');
+        codeContainer.className = 'code-block-container';
+
+        const codeHeader = document.createElement('div');
+        codeHeader.className = 'code-block-header';
+        codeHeader.innerHTML = '<span class="code-lang">PL/SQL</span>';
+        codeContainer.appendChild(codeHeader);
+
+        const codeBlock = document.createElement('pre');
+        codeBlock.className = 'code-block';
+
+        const codeElement = document.createElement('code');
+        codeElement.className = 'language-plsql';
+        codeElement.textContent = question.code;
+
+        codeBlock.appendChild(codeElement);
+        codeContainer.appendChild(codeBlock);
+        questionText.appendChild(codeContainer);
+    }
+
     // Add image if it exists
     if (question.image) {
         const imageElement = document.createElement('img');
@@ -91,11 +114,11 @@ function displayQuestion() {
         imageElement.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
         questionText.appendChild(imageElement);
     }
-    
+
     currentQuestionSpan.textContent = currentQuestionIndex + 1;
-    
+
     optionsContainer.innerHTML = '';
-    
+
     // Check if this is the matching question (question with صل بين المصطلحات)
     if (question.question.includes('صل بين المصطلحات')) {
         // Special handling for matching question
@@ -113,7 +136,7 @@ function displayQuestion() {
             optionsContainer.appendChild(optionElement);
         });
     }
-    
+
     updateNavButtons();
     updateQuestionGrid();
     updateStatus();
@@ -123,14 +146,14 @@ function displayMatchingQuestion(question) {
     // Create a matching interface
     const matchingContainer = document.createElement('div');
     matchingContainer.className = 'matching-container';
-    
+
     // Extract terms and definitions from the options
     const options = question.options;
-    
+
     // Create arrays to store terms and definitions
     const terms = [];
     const definitions = [];
-    
+
     // Parse options to extract terms and definitions
     options.forEach(option => {
         // Split at the colon to separate term from definition
@@ -142,17 +165,17 @@ function displayMatchingQuestion(question) {
             definitions.push(definition);
         }
     });
-    
+
     // Create table layout for matching
     const table = document.createElement('table');
     table.className = 'matching-table';
     table.style.width = '100%';
     table.style.borderCollapse = 'separate';
     table.style.borderSpacing = '0 10px';
-    
+
     // Create header row
     const headerRow = document.createElement('tr');
-    
+
     const defHeader = document.createElement('th');
     defHeader.textContent = 'التعريف';
     defHeader.style.padding = '10px';
@@ -161,7 +184,7 @@ function displayMatchingQuestion(question) {
     defHeader.style.fontWeight = 'bold';
     defHeader.style.fontSize = '1.1rem';
     defHeader.style.width = '40%';
-    
+
     const matchHeader = document.createElement('th');
     matchHeader.textContent = 'اختر';
     matchHeader.style.padding = '10px';
@@ -170,7 +193,7 @@ function displayMatchingQuestion(question) {
     matchHeader.style.fontWeight = 'bold';
     matchHeader.style.fontSize = '1.1rem';
     matchHeader.style.width = '20%';
-    
+
     const termHeader = document.createElement('th');
     termHeader.textContent = 'المصطلح';
     termHeader.style.padding = '10px';
@@ -179,19 +202,19 @@ function displayMatchingQuestion(question) {
     termHeader.style.fontWeight = 'bold';
     termHeader.style.fontSize = '1.1rem';
     termHeader.style.width = '40%';
-    
+
     headerRow.appendChild(defHeader);
     headerRow.appendChild(matchHeader);
     headerRow.appendChild(termHeader);
     table.appendChild(headerRow);
-    
+
     // Create rows for each term-definition pair
     terms.forEach((term, termIndex) => {
         const row = document.createElement('tr');
         row.style.backgroundColor = '#f8f9fa';
         row.style.borderRadius = '8px';
         row.style.marginBottom = '10px';
-        
+
         const termCell = document.createElement('td');
         termCell.className = 'term-cell';
         termCell.textContent = term;
@@ -201,24 +224,24 @@ function displayMatchingQuestion(question) {
         termCell.style.borderRight = '4px solid #1976d2';
         termCell.style.fontWeight = '600';
         termCell.style.color = '#1976d2';
-        
+
         const matchCell = document.createElement('td');
         matchCell.style.textAlign = 'center';
         matchCell.style.padding = '10px';
         matchCell.style.backgroundColor = '#fff';
-        
+
         const defCell = document.createElement('td');
         defCell.className = 'definition-cell';
         defCell.style.padding = '15px';
         defCell.style.backgroundColor = '#f5f5f5';
         defCell.style.borderRadius = '8px 0 0 8px';
         defCell.style.borderRight = '4px solid #43a047';
-        
+
         // Get the correct definition for this term
         if (termIndex < definitions.length) {
             defCell.textContent = definitions[termIndex];
         }
-        
+
         // Create dropdown select menu
         const selectElement = document.createElement('select');
         selectElement.className = 'select-definition custom-select';
@@ -230,36 +253,36 @@ function displayMatchingQuestion(question) {
         selectElement.style.border = '1px solid #ddd';
         selectElement.style.backgroundColor = '#fff';
         selectElement.style.cursor = 'pointer';
-        
+
         // Add default option
         const defaultOption = document.createElement('option');
         defaultOption.value = "";
         defaultOption.textContent = "إختر...";
         selectElement.appendChild(defaultOption);
-        
+
         // Add all definitions as options
         definitions.forEach((definition, defIndex) => {
             const option = document.createElement('option');
             option.value = defIndex.toString();
             option.textContent = definition;
             selectElement.appendChild(option);
-            
+
             // If there's a saved answer for this matching question
-            if (answers[currentQuestionIndex] && 
+            if (answers[currentQuestionIndex] &&
                 answers[currentQuestionIndex][termIndex] === defIndex) {
                 option.selected = true;
             }
         });
-        
+
         // Add change event listener
         selectElement.addEventListener('change', (e) => {
             const defIndex = parseInt(e.target.value);
-            
+
             // Save the match in the answers object
             if (!answers[currentQuestionIndex]) {
                 answers[currentQuestionIndex] = {};
             }
-            
+
             if (e.target.value === "") {
                 // If default "choose" option is selected, remove the answer
                 delete answers[currentQuestionIndex][termIndex];
@@ -267,37 +290,37 @@ function displayMatchingQuestion(question) {
                 // Save the selection
                 answers[currentQuestionIndex][termIndex] = defIndex;
             }
-            
+
             updateQuestionGrid();
             updateScore();
             updateStatus();
         });
-        
+
         matchCell.appendChild(selectElement);
-        
+
         row.appendChild(defCell);
         row.appendChild(matchCell);
         row.appendChild(termCell);
         table.appendChild(row);
     });
-    
+
     matchingContainer.appendChild(table);
     optionsContainer.appendChild(matchingContainer);
-    
+
     // Add a special class to the options container for styling
     optionsContainer.classList.add('matching-question');
 }
 
 function selectOption(index) {
     const question = getQuestion(currentQuestionIndex);
-    
+
     // Handle matching question differently
     if (question.question.includes('صل بين المصطلحات')) {
         // Don't do standard option selection for matching questions
         // The selection is handled in the displayMatchingQuestion function
         return;
     }
-    
+
     // Regular option selection for standard questions
     answers[currentQuestionIndex] = index;
     const options = document.querySelectorAll('.option');
@@ -315,26 +338,26 @@ function navigateToQuestion(index) {
 
 function updateNavButtons() {
     if (!prevBtn || !nextBtn) return;
-    
+
     prevBtn.disabled = currentQuestionIndex === 0;
     nextBtn.disabled = currentQuestionIndex === getTotalQuestions() - 1;
 }
 
 function updateStatus() {
     if (!statusIndicator) return;
-    
+
     const question = getQuestion(currentQuestionIndex);
     if (!question) return;
-    
+
     const answer = answers[currentQuestionIndex];
-    
+
     if (question.question.includes('صل بين المصطلحات')) {
         // For matching question
         if (!answer || Object.keys(answer).length === 0) {
             statusIndicator.textContent = 'لم تتم الإجابة';
         } else {
             let allCorrect = true;
-            
+
             // Check if all matches are correct
             for (const termIndex in answer) {
                 const defIndex = answer[termIndex];
@@ -343,11 +366,11 @@ function updateStatus() {
                     break;
                 }
             }
-            
+
             // Check if all terms have a match
             const expectedTerms = question.options.length;
             const matchedTerms = Object.keys(answer).length;
-            
+
             if (allCorrect && expectedTerms === matchedTerms) {
                 statusIndicator.textContent = 'إجابة صحيحة';
             } else if (matchedTerms < expectedTerms) {
@@ -370,19 +393,19 @@ function updateStatus() {
 
 function updateScore() {
     if (!scoreElement) return;
-    
+
     let currentScore = 0;
     const maxScore = getMaxScore();
-    
+
     answers.forEach((answer, index) => {
         const question = getQuestion(index);
         if (!question) return;
-        
+
         if (question.question.includes('صل بين المصطلحات')) {
             // For matching question
             if (answer && typeof answer === 'object') {
                 let allCorrect = true;
-                
+
                 // Check if all matches are correct
                 for (const termIndex in answer) {
                     const defIndex = answer[termIndex];
@@ -391,11 +414,11 @@ function updateScore() {
                         break;
                     }
                 }
-                
+
                 // Check if all terms have a match
                 const expectedTerms = question.options.length;
                 const matchedTerms = Object.keys(answer).length;
-                
+
                 if (allCorrect && expectedTerms === matchedTerms) {
                     currentScore += question.score;
                 }
@@ -407,7 +430,7 @@ function updateScore() {
             }
         }
     });
-    
+
     score = currentScore;
     const percentage = (currentScore / maxScore * 100).toFixed(2);
     scoreElement.textContent = `${currentScore.toFixed(2)} من ${maxScore.toFixed(2)} (${percentage}%)`;
@@ -415,7 +438,7 @@ function updateScore() {
 
 function updateTimer() {
     if (!timerElement) return;
-    
+
     const now = new Date();
     const diff = Math.floor((now - startTime) / 1000);
     const minutes = Math.floor(diff / 60);
@@ -439,14 +462,14 @@ nextBtn?.addEventListener('click', () => {
 // Initialize questions from external file
 function loadQuestionsFromExternalFile() {
     logDebug('Loading questions from external file');
-    
+
     // Check if questions are already loaded from the external file
     if (typeof window.questions !== 'undefined' && window.questions.length > 0) {
         questions = window.questions;
         logDebug(`Loaded ${questions.length} questions from global scope`);
         return true;
     }
-    
+
     // If not in global scope, try to load via localStorage as fallback
     const savedQuestions = localStorage.getItem('examQuestions');
     if (savedQuestions) {
@@ -458,7 +481,7 @@ function loadQuestionsFromExternalFile() {
             logDebug(`Error parsing questions from localStorage: ${e.message}`);
         }
     }
-    
+
     logDebug('Failed to load questions');
     return false;
 }
@@ -467,12 +490,12 @@ function getQuestion(index) {
     if (!questions || questions.length === 0) {
         loadQuestionsFromExternalFile();
     }
-    
+
     if (!questions || !questions[index]) {
         logDebug(`Question not found at index ${index}`);
         return null;
     }
-    
+
     return questions[index];
 }
 
@@ -480,7 +503,7 @@ function getTotalQuestions() {
     if (!questions || questions.length === 0) {
         loadQuestionsFromExternalFile();
     }
-    
+
     return questions ? questions.length : 0;
 }
 
@@ -488,13 +511,13 @@ function getMaxScore() {
     if (!questions || questions.length === 0) {
         loadQuestionsFromExternalFile();
     }
-    
+
     return questions ? questions.reduce((total, q) => total + (q.score || 1), 0) : 0;
 }
 
 function initializeExam() {
     logDebug('Initializing exam');
-    
+
     // Load questions first
     if (!loadQuestionsFromExternalFile()) {
         logDebug('Failed to load questions, displaying error message');
@@ -503,32 +526,32 @@ function initializeExam() {
         }
         return;
     }
-    
+
     // Initialize the answers array with the correct length
     answers = new Array(getTotalQuestions()).fill(null);
     logDebug(`Initialized answers array with ${answers.length} slots`);
-    
+
     const now = new Date();
     if (examDate) {
         examDate.textContent = now.toLocaleDateString('ar-SA');
     }
-    
+
     // Update timer once and then set interval
     if (timerElement) {
         timerElement.textContent = "0 دقائق";
         setInterval(updateTimer, 60000);
     }
-    
+
     // Initialize exam UI
     initializeQuestionGrid();
     displayQuestion();
     updateScore();
-    
+
     // Hide loading indicator
     if (loadingIndicator) {
         loadingIndicator.style.display = 'none';
     }
-    
+
     logDebug('Exam initialization complete');
 }
 
