@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>final test idk</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="exam-container">
+        <div class="nav-panel">
+            <div class="nav-header">التنقل في الاختبار</div>
+            <div class="question-grid">
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="exam-header">
+                <div class="exam-title">
+                    <h1>اختبار تجريبي</h1>
+                    <div class="exam-info">
+                        <div class="info-item">
+                            <span>تاريخ:</span>
+                            <span id="exam-date"></span>
+                        </div>
+                        <div class="info-item">
+                            <span>وقت:</span>
+                            <span id="timer">0 دقائق</span>
+                        </div>
+                        <div class="info-item">
+                            <span>الدرجة:</span>
+                            <span id="score">0.00 من 0.00 (0%)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-container">
+                <div class="question-number">سؤال <span id="current-question">1</span></div>
+                <div id="question-text" class="question-text"></div>
+                <div id="options-container" class="options-container"></div>
+                <div class="question-footer">
+                    <div class="question-status">
+                        <span id="status-indicator"></span>
+                    </div>
+                    <div class="question-nav-buttons">
+                        <button id="prev-btn" class="nav-btn">السابق</button>
+                        <button id="next-btn" class="nav-btn">التالي</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add a loading indicator -->
+    <div id="loading-indicator" class="loading-indicator">جاري تحميل الأسئلة...</div>
+    
+    <!-- Load scripts with defer attribute to ensure they execute in order after page loads -->
+    <script src="questions.js" defer></script>
+    <script src="app.js" defer></script>
+</body>
+</html> 
