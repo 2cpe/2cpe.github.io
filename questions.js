@@ -274,6 +274,170 @@ End ;`,
             options: ["صح", "خطأ"],
             correctAnswer: 1, // صح - متغير الحلقة يُعرّف تلقائياً
             score: 1.00
+        },
+
+        // ==================== New Questions - Cursors, Procedures, Functions, Exceptions ====================
+
+        // سؤال جديد - PROCEDURE
+        {
+            question: "ما هو اسم الـ PROCEDURE في الكود التالي:",
+            code: `CREATE OR REPLACE PROCEDURE squareNum(x IN OUT NUMBER) IS
+BEGIN
+    x := x * x;
+END;`,
+            options: ["CREATE", "squareNum", "x", "PROCEDURE"],
+            correctAnswer: 2, // squareNum
+            score: 1.00
+        },
+
+        // سؤال جديد - استثناء No_data_found
+        {
+            question: "استثناء No_data_found ينطلق عندما الـ Select لا تجد صفوف تحقق شروطها.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - SQL%NOTFOUND
+        {
+            question: "الخاصية SQL%NOTFOUND عند عدم وجود بيانات تقوم بإرجاع:",
+            options: ["FALSE", "TRUE", "NULL", "0"],
+            correctAnswer: 2, // TRUE
+            score: 1.00
+        },
+
+        // سؤال جديد - تعريف واستدعاء الخطأ
+        {
+            question: "عند تعريف الخطأ التالي: ex_invalid_id EXCEPTION، ما هو الأمر الصحيح الذي يستدعي الخطأ أعلاه؟",
+            options: [
+                "IF c_id <= 0 THEN CALL ex_invalid_id;",
+                "IF c_id <= 0 THEN RAISE ex_invalid_id;",
+                "IF c_id <= 0 THEN THROW ex_invalid_id;",
+                "IF c_id <= 0 THEN ERROR ex_invalid_id;"
+            ],
+            correctAnswer: 2, // IF c_id <= 0 THEN RAISE ex_invalid_id;
+            score: 1.00
+        },
+
+        // سؤال جديد - %ISOPEN
+        {
+            question: "أي مما يلي تقوم بإرجاع true إذا كان المؤشر مفتوحاً؟",
+            options: ["%FOUND", "%NOTFOUND", "%ISOPEN", "%ROWCOUNT"],
+            correctAnswer: 3, // %ISOPEN
+            score: 1.00
+        },
+
+        // سؤال جديد - وظيفة المؤشر
+        {
+            question: "ما هي وظيفة المؤشر التالي:",
+            code: `Cursor Emp_Cursor is 
+Select Employee_Id, Last_Name 
+From Employees 
+Where Department_Id = 30;`,
+            options: [
+                "يقوم بإستخراج جميع بيانات الموظفين",
+                "يقوم بإستخراج اسماء وارقام موظفي الإدارة رقم 30",
+                "يقوم بحذف موظفي الإدارة رقم 30",
+                "يقوم بتحديث بيانات الإدارة رقم 30"
+            ],
+            correctAnswer: 2, // يقوم بإستخراج اسماء وارقام موظفي الإدارة رقم 30
+            score: 1.00
+        },
+
+        // سؤال جديد - %FOUND
+        {
+            question: "في الـ cursor الضمني، الخاصية التي ترجع true عند تأثر الصفوف بتعليمات DML:",
+            options: ["%ISOPEN", "%NOTFOUND", "%FOUND", "%ROWCOUNT"],
+            correctAnswer: 3, // %FOUND
+            score: 1.00
+        },
+
+        // سؤال جديد - RECORD
+        {
+            question: "السجل RECORD هو عبارة عن متغير يحمل بداخله أكثر من قيمة.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - إعادة فتح الكرسور
+        {
+            question: "يمكن إعادة فتح الكرسور قبل إغلاقه.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2, // خطأ - يجب إغلاقه أولاً
+            score: 1.00
+        },
+
+        // سؤال جديد - PROCEDURE Parameters
+        {
+            question: "قد تأخذ الـ PROCEDURE معطيات PARAMETERS وقد لا تأخذ.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - معالجة الأخطاء
+        {
+            question: "نستطيع في لغة PL/SQL معالجة الأخطاء وإظهارها بالشكل الذي نريده.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - Explicit Cursor
+        {
+            question: "الـ Explicit Cursor ليس من النوع الضمني حيث أن المبرمج هو من يقوم بتعريفه ومن ثم فتحه وتعبئته وغلقه.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - الدالة و return
+        {
+            question: "يجب أن تحتوي الدالة على الأمر return.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - تعريف الكرسور
+        {
+            question: "يتم تعريف الكرسور في منطقة الـ Declare وهو عبارة عن تعليمة Select.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - SQLCODE
+        {
+            question: "الأمر SQLCODE يرجع لنا نص رسالة الـ ERROR.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2, // خطأ - SQLCODE يرجع رقم الخطأ، بينما SQLERRM يرجع النص
+            score: 1.00
+        },
+
+        // سؤال جديد - CLOSE cursor
+        {
+            question: "تعليمة CLOSE تقوم بإلغاء منطقة الـ active set وإرجاع البيانات إلى BD.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
+        },
+
+        // سؤال جديد - OPEN cursor
+        {
+            question: "ما هي التعليمة التي تقوم بتنفيذ جملة الاستعلام وجلب البيانات الى الـ active set في المؤشرات الصريحة:",
+            options: ["Declare cursor", "Fetch cursor", "Close cursor", "Open cursor"],
+            correctAnswer: 4, // Open cursor
+            score: 1.00
+        },
+
+        // سؤال جديد - تعريف Cursor
+        {
+            question: "يعتبر المؤشر (Cursor) مساحة في الرام تقوم أوراكل بتجهيزها تلقائيا مع كل جملة SQL وتضع بها البيانات القادمة منها.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // صح
+            score: 1.00
         }
     ];
 
