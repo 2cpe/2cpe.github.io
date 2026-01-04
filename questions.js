@@ -1,315 +1,192 @@
+بناءً على الملفات التي قمت برفعها (`1.txt` و `2.txt`) والتي تحتوي على أسئلة في لغة برمجة **PL/SQL**، قمت بدمج الأسئلة، حذف المكرر منها، وحلّها (تحديد الإجابات الصحيحة) وتنسيقها داخل ملف `JavaScript` بنفس الهيكلية التي طلبتها في ملف `questions.js`.
+
+إليك الكود الجاهز (يمكنك نسخ هذا المحتوى واستبدال ما بداخل ملف `questions.js` به):
+
+```javascript
 // Define questions array in a way that works in both browser and module environments
 (function(global) {
-    // Original questions array
+    // Updated PL/SQL Questions from uploaded files
     const questions = [
-        // Set 1
         {
-            question: "لا يعد اضطراب الأفكار من مشكلات الكتابة .",
+            question: "تعريف المتغير التالي صحيح: v_valid Boolean := false",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "يمكن اكتساب المهارة اللغوية بالتدرّب و الممارسة .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "القراءة في اللغة :",
+            question: "أوجد مخرجات الوحدة البرمجية التالية:\nDeclare\nV_num1 number := 10;\nV_num2 number := 100;\nV_result number := 0;\nBegin\nV_num1 := V_num2 * 2;\nV_num2 := V_num1 + 2;\nV_result := V_num1 + V_num2;\nDbms_output.put_line(V_num1 || ' ' || V_num2 || ' ' || v_result);\nEnd;",
             options: [
-                "تتبع الكلمات نظراً و الاستمتاع بها",
-                "تتبع الكلمات نظراً و نطقها",
-                "تتبع الكلمات نظراً و نقدها",
-                "تتبع الكلمات نظراً و الإفادة منها"
+                "10 202 400",
+                "200 202 402",
+                "400 200 20",
+                "10 100 10"
             ],
-            correctAnswer: 2, // تتبع الكلمات نظراً و نطقها
+            correctAnswer: 1, // 200 202 402
             score: 1.00
         },
         {
-            question: "المهارة في اللغة : الحذق و الإجادة .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "واحدة مما يلي ليست دليلاً على أهمية الكتابة :",
+            question: "أوجد مخرجات الوحدة البرمجية التالية:\nDECLARE\na number(3) := 100;\nBEGIN\nIF (a == 50 ) THEN\ndbms_output.put_line('Value of a is 50' );\nELSIF ( a == 75 )\ndbms_output.put_line('Value of a is 75' );\nELSE\ndbms_output.put_line('None of the values is matching: '|| a );\nEND IF;\nEND;",
             options: [
-                "أنها ذاكرة للحضارات و الأمم",
-                "أنها قوام المعاملات في تنظيم الدول و المجتمعات",
-                "أنها عملية ذاتية فقط",
-                "أنها أداة من أدوات التعلم و المعرفة"
+                "None of the values is matching: 100",
+                "None of the values is matching:",
+                "Value of a is 50",
+                "Value of a is 75"
             ],
-            correctAnswer: 3, // أنها عملية ذاتية فقط
+            correctAnswer: 0, // None of the values is matching: 100
             score: 1.00
         },
         {
-            question: "من مستويات الاتصال بين المرسل و المتلقي : الاتصال النسبي ، وفيه يكون فهم الرسالة تاماً .",
+            question: "تعريف المتغير التالي صحيح: v_date DATE NOT NULL := SYSDATE",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "يجب على من يكتب كتابة وظيفية أن يختار الكلمات ذات المعنى المحدد الواضح .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "للغة و ظائف فردية فقط .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
-            score: 1.00
-        },
-        {
-            question: "تؤدي اللغة وظيفة مرجعية .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "الكتابة في مجال الشِعر ، دليل على أهمية الكتابة ، فهي :",
+            question: "أوجد مخرجات الوحدة البرمجية التالية:\nBegin\nfor i in 5..5 loop\nDbms_output.put_line(i);\nend loop;\nend;",
             options: [
-                "أداة الإبداع الأدبي",
-                "وسيلة للتوثيق و الحفظ",
-                "قوام المعاملات التي تنظم شؤون المجتمهات و الدول",
-                "وسيلة للتنفيس"
+                "loop",
+                "i",
+                "Error",
+                "5"
             ],
-            correctAnswer: 1, // أداة الإبداع الأدبي
+            correctAnswer: 3, // 5
             score: 1.00
         },
         {
-            question: "العلاقة بين التعريف اللغوى و التعريف الاصطلاحي للكتابة أنهما :",
+            question: "أوجد مخرجات الوحدة البرمجية التالية:\nDeclare\nv_ename char(20) := 'Ahmed';\nBegin\nV_name := 'Abdul';\nDbms_output.put_line(v_ename);\nEnd if; End;",
             options: [
-                "متضادان",
-                "مترابطان",
-                "لا جامع بينهما",
-                "متباعدان"
+                "NULL",
+                "يوجد خطأ في الكود",
+                "Abdul",
+                "Ahmed"
             ],
-            correctAnswer: 2, // مترابطان
+            correctAnswer: 1, // يوجد خطأ في الكود (بسبب وجود End if بدون If وعدم تعريف V_name)
             score: 1.00
         },
         {
-            question: "الكتابة الإبداعية لا تختلف فيها أساليب الكتّاب.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
-            score: 1.00
-        },
-        {
-            question: "ذكر إدوارد سابير في تعريفه للغة أنها : ( غير غريزية ) ، وهذا يعني عدم قدرة الفرد على تعلمها من المحيط الاجتماعي .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
-            score: 1.00
-        },
-        {
-            question: "وظيفة اللغة التواصلية من أهم الوظائف الأساسية .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "بواسطة اللغة يتداول الناس الفكر .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "( الرواية ) من أمثلة الكتابة الإبداعية .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "من خصائص القراءة الصامتة أنها : تبدد الوقت بلا فائدة.",
-            options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
-            score: 1.00
-        },
-        {
-            question: "في كتابة التاريخ دليل على أهمية الكتابة إذ هي :",
+            question: "أي من العلامات التالية تستخدم لإعطاء المتغير قيمة معينة (Assignment):",
             options: [
-                "ذاكرة الأمة",
-                "وسيلة تنفيس",
-                "أداة لتنظيم الدولة و المجتمع",
-                "أداة الإبداع الأدبي"
+                ":=",
+                "=",
+                "==",
+                "=:"
             ],
-            correctAnswer: 1, // ذاكرة الأمة
+            correctAnswer: 0, // :=
             score: 1.00
         },
         {
-            question: "للغة وظائف اجتماعية .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "من معاني ( الكتابة ) في اللغة :",
+            question: "لإضافة تعليق بسطر واحد نستخدم الطريقة التالية:",
             options: [
-                "الحاجة و العون",
-                "القضاء و الإلزام",
-                "التقليل و التكثير",
-                "الحل و البسط"
+                "/* هنا التعليق",
+                "جميع ما سبق",
+                "// هنا التعليق",
+                "-- هنا التعليق"
             ],
-            correctAnswer: 2, // القضاء و الإلزام
+            correctAnswer: 3, // -- هنا التعليق
             score: 1.00
         },
-        // Set 2
         {
-            question: "بواسطة اللغة يتداول الناس الفكر .",
+            question: "المتغير الثابت constant متغير يحتفظ بقيمته أثناء تنفيذ الوحدة البرمجية.",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "المهارة اللغوة : أداء لغوي يتميز بالوضوح و الدقة و الترابط و المرونة بأسلوب جميل وصياغة حسنة .",
+            question: "في تعريف المتغيرات يمكن تعريف متغير بالاعتماد على متغير آخر (مثل استخدام %TYPE).",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "المهارة في الاصطلاح : قدرة الإنسان على القيام بعمل ما بسرعة بلا إتقان .",
+            question: "في الوحدة البرمجية يتم كتابة قسم الإستثناءات في منطقة التنفيذ (Begin block).",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 1, // خطأ (يُكتب بعد منطقة التنفيذ وقبل End)
             score: 1.00
         },
         {
-            question: "واحد مما يلي ليست من أركان الموقف اللغوي :",
+            question: "لغة PL/SQL هي امتداد للغة الـ SQL بإضافة مميزات لغة البرمجة الإجرائية.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 0, // صح
+            score: 1.00
+        },
+        {
+            question: "يتم تعريف المتغير في منطقة الـ Declare وهو عبارة عن مكان بالذاكرة المؤقتة لحفظ قيمة معينة.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 0, // صح
+            score: 1.00
+        },
+        {
+            question: "تعتبر منطقة الجزء التنفيذي الـ Begin منطقة اختيارية في الوحدة البرمجية.",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1, // خطأ (هي المنطقة الإلزامية الوحيدة)
+            score: 1.00
+        },
+        {
+            question: "أي من المتغيرات التالية تم تعريفه بشكل صحيح؟",
             options: [
-                "المرسل",
-                "المستقبل",
-                "القراءة",
-                "الوسيلة أو الأداة"
+                "3v_num VARCHAR2(20);",
+                "v_num VARCHAR2(20);",
+                "v num VARCHAR2(20);",
+                "begin VARCHAR2(20);"
             ],
-            correctAnswer: 3, // القراءة
+            correctAnswer: 1, // v_num
             score: 1.00
         },
         {
-            question: "من خصائص القراءة الصامتة أنها : عالية التركيز .",
+            question: "متغير حلقة التكرار for loop يتم تعريفه ضمنياً.",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "لا يجب على الكاتب تحديد نوع كتابته و أسلوبها قبل البدء في عملية الكتابة .",
+            question: "تستخدم المتغيرات لإضافة وتعديل البيانات الموجودة في قواعد البيانات ويمكن استخدامها أكثر من مرة.",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "تعتمد الكتابة الإبداعية علي الخيال و التصوير البياني .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "من مستويات الاتصال بين المرسل و المتلقي : الاتصال النسبي ، وفيه يكون فهم الرسالة جزئياً .",
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "واحدة مما يلي من طبيعة عملية القراءة :",
+            question: "أوجد مخرجات الوحدة البرمجية التالية:\nDECLARE\nx number := 10;\nBEGIN\nLOOP\nx := x + 1;\nIF x >= 11 THEN\ndbms_output.put_line(x);\nexit;\nEND IF;\ndbms_output.put_line('After Exit x is: ' || x);\nEnd loop;\nEND;",
             options: [
-                "عملية نقدية",
-                "عملية نامية و متطورة",
-                "عملية مؤقتة",
-                "عملية تقنية"
+                "20",
+                "X",
+                "10",
+                "11"
             ],
-            correctAnswer: 2, // عملية نامية و متطورة
+            correctAnswer: 3, // 11
             score: 1.00
         },
         {
-            question: "واحدة مما يلي من طبيعة عملية القراءة :", // Note: Same question as above, different option order / correct answer
-            options: [
-                "عملية مؤقتة",
-                "عملية نقدية",
-                "عملية تقنية",
-                "عملية نامية و متطورة"
-            ],
-            correctAnswer: 4, // عملية نامية و متطورة
-            score: 1.00
-        },
-        {
-            question: "من معاني ( الكتابة ) في اللغة :", // Note: Similar to Q20 Set 1, different option order / correct answer
-            options: [
-                "الحل و البسط",
-                "الحاجة و العون",
-                "التقليل و التكثير",
-                "القضاء و الإلزام"
-            ],
-            correctAnswer: 4, // القضاء و الإلزام
-            score: 1.00
-        },
-        {
-            question: "من خصائص القراءة الجهرية أنها : تعتمد على طبقة صوتية واحدة لا تتغير .",
+            question: "هل تم كتابة جملة الشرط التالية بشكل صحيح:\nIF condition THEN\ncode ;\nEND IF;",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "لا يجب على الكاتب تحديد نوع كتابته و أسلوبها قبل البدء في عملية الكتابة .", // Note: Identical to Q6 Set 2
+            question: "تعريف المتغير صحيح: v_x, V_y number(4);",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 1, // خطأ (لا يمكن تعريف متغيرين بفاصلة في سطر واحد في PL/SQL)
             score: 1.00
         },
         {
-            question: "الوظيفة التوجيهية للغة تعني : عدم قدرة اللغة على التأثير في سلوك الفرد و الجماعات .",
+            question: "تعريف المتغير صحيح: V_x varchar2(25);",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "واحدة من الفقرات التالية ليست من أهداف القراءة :",
-            options: [
-                "تبديد الوقت",
-                "الترويح عن النفس",
-                "التعلم",
-                "التثقيف"
-            ],
-            correctAnswer: 1, // تبديد الوقت
-            score: 1.00
-        },
-        {
-            question: "من مستويات الاتصال بين المرسل و المتلقي : تمام الانقطاع ، وفيه يكون فهم الرسالة كلياً .",
+            question: "جمل التعامل والاستعلام الخاصة بلغة الـ SQL يتم إدراجها داخل أكواد لغة الـ PL/SQL.",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
+            correctAnswer: 0, // صح
             score: 1.00
         },
         {
-            question: "ينبغي للمرسل في العملية التواصلية ألّا يكون :",
-            options: [
-                "حسن التعبير",
-                "ملماً بتفاصيل الرسالة",
-                "متجاهلاً لحالة المستقبل",
-                "واضحاً"
-            ],
-            correctAnswer: 3, // متجاهلاً لحالة المستقبل
-            score: 1.00
-        },
-        {
-            question: "من تعاريف اللغة أنها : ( وسيلة غير إنسانية ، غريزية ، تمكن الفرد من تبادل الأفكار و العواطف و الرغبات ).",
+            question: "تعريف المتغير صحيح: v_empno employee_id.employees%type",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ
-            score: 1.00
-        },
-        {
-            question: "يجب على من يكتب كتابة وظيفية أن يختار الكلمات ذات المعنى المحدد الواضح .", // Note: Identical to Q7 Set 1
-            options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
-            score: 1.00
-        },
-        {
-            question: "في قوله تعالى : [ يا أيها الذين آمنوا إذا تداينتم بدين إلى أجل مسمى فاكتبوه ] ، دليل على أهمية الكتابة إذ هي :",
-            options: [
-                "وسيلة لحفظ الحقوق و التوثيق",
-                "وسيلة للتواصل مع الطرف الآخر",
-                "وسيلة للتسلية",
-                "أداة للإبداع الأدبي"
-            ],
-            correctAnswer: 1, // وسيلة لحفظ الحقوق و التوثيق
+            correctAnswer: 1, // خطأ (الصيغة الصحيحة: table_name.column_name%type أي employees.employee_id%type)
             score: 1.00
         }
     ];
+
     // Make questions available globally
     global.questions = questions;
 
@@ -361,4 +238,6 @@
     // Log questions loaded for debugging
     console.log(`Loaded ${questions.length} questions`);
 
-})(typeof window !== 'undefined' ? window : this); // This works in both browser and Node.js 
+})(typeof window !== 'undefined' ? window : this); // This works in both browser and Node.js
+
+```
