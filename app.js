@@ -20,6 +20,15 @@ function logDebug(message) {
     console.log(`[Debug] ${message}`);
 }
 
+// Helper function to detect if text is primarily Arabic
+function isArabicText(text) {
+    if (!text) return false;
+    // Arabic Unicode range: \u0600-\u06FF (Arabic), \u0750-\u077F (Arabic Supplement)
+    const arabicPattern = /[\u0600-\u06FF\u0750-\u077F]/;
+    // Check if text contains Arabic characters
+    return arabicPattern.test(text);
+}
+
 function initializeQuestionGrid() {
     const grid = document.querySelector('.question-grid');
     if (!grid) {
@@ -131,6 +140,17 @@ function displayQuestion() {
             if (answers[currentQuestionIndex] === index) {
                 optionElement.classList.add('selected');
             }
+
+            // Detect if text is primarily Arabic or English/Code
+            const isArabic = isArabicText(option);
+            if (isArabic) {
+                optionElement.style.direction = 'rtl';
+                optionElement.style.textAlign = 'right';
+            } else {
+                optionElement.style.direction = 'ltr';
+                optionElement.style.textAlign = 'left';
+            }
+
             optionElement.textContent = option;
             optionElement.addEventListener('click', () => selectOption(index));
             optionsContainer.appendChild(optionElement);

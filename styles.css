@@ -107,7 +107,7 @@ header h1 {
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .exam-title h1 {
@@ -142,7 +142,7 @@ header h1 {
     background: white;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .question-number {
@@ -187,16 +187,31 @@ header h1 {
     gap: 10px;
     background-color: #fff;
     min-height: 40px;
+    flex-direction: row-reverse;
+    /* Default for RTL - radio on right */
 }
 
-.option::before {
+/* LTR options (English/Code) */
+.option[style*="direction: ltr"] {
+    flex-direction: row;
+    /* Radio on left for LTR */
+}
+
+.option::after {
     content: "";
     width: 18px;
     height: 18px;
+    min-width: 18px;
     border: 2px solid #90a4ae;
     border-radius: 50%;
     display: inline-block;
     transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+/* Remove old ::before */
+.option::before {
+    display: none;
 }
 
 .option:hover {
@@ -204,7 +219,7 @@ header h1 {
     border-color: #1976d2;
 }
 
-.option:hover::before {
+.option:hover::after {
     border-color: #1976d2;
 }
 
@@ -213,7 +228,7 @@ header h1 {
     border-color: #1976d2;
 }
 
-.option.selected::before {
+.option.selected::after {
     background-color: #1976d2;
     border-color: #1976d2;
 }
@@ -223,7 +238,7 @@ header h1 {
     border-color: #43a047;
 }
 
-.option.correct::before {
+.option.correct::after {
     background-color: #43a047;
     border-color: #43a047;
 }
@@ -233,7 +248,7 @@ header h1 {
     border-color: #e53935;
 }
 
-.option.wrong::before {
+.option.wrong::after {
     background-color: #e53935;
     border-color: #e53935;
 }
@@ -347,7 +362,7 @@ header h1 {
     background-color: #f8f9fa;
     border-radius: 8px;
     margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .term-cell {
@@ -380,7 +395,8 @@ header h1 {
     transition: all 0.2s ease;
 }
 
-.select-definition:hover, .select-definition:focus {
+.select-definition:hover,
+.select-definition:focus {
     border-color: #1976d2;
     outline: none;
     box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
@@ -398,33 +414,33 @@ header h1 {
     .exam-container {
         flex-direction: column;
     }
-    
+
     .nav-panel {
         width: 100%;
         border-left: none;
         border-bottom: 1px solid #ddd;
         padding: 15px;
     }
-    
+
     .main-content {
         padding: 15px;
     }
-    
+
     .exam-info {
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .options-container {
         gap: 8px;
         min-height: 80px;
     }
-    
+
     .option {
         padding: 10px;
         min-height: 36px;
     }
-    
+
     .question-text {
         padding: 10px;
         font-size: 0.95rem;
@@ -432,38 +448,39 @@ header h1 {
         border-right-width: 3px;
         display: block;
     }
-    
+
     .question-footer {
         flex-direction: column-reverse;
         gap: 15px;
     }
-    
+
     .question-nav-buttons {
         width: 100%;
         display: flex;
         justify-content: space-between;
     }
-    
+
     .nav-btn {
         flex: 1;
         margin: 0 5px;
     }
-    
+
     .question-status {
         width: 100%;
         text-align: center;
     }
-    
+
     .matching-table th {
         font-size: 0.9rem;
         padding: 8px;
     }
-    
-    .term-cell, .definition-cell {
+
+    .term-cell,
+    .definition-cell {
         padding: 10px;
         font-size: 0.9rem;
     }
-    
+
     .select-definition {
         padding: 6px 10px;
         font-size: 0.8rem;
@@ -474,15 +491,15 @@ header h1 {
     .question-grid {
         grid-template-columns: repeat(5, 1fr);
     }
-    
+
     .exam-title h1 {
         font-size: 1rem;
     }
-    
+
     .nav-header {
         font-size: 0.8rem;
     }
-    
+
     .info-item {
         font-size: 0.8rem;
     }
@@ -573,7 +590,8 @@ header h1 {
 }
 
 /* Option code styling */
-.option code, .option-code {
+.option code,
+.option-code {
     font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
     background-color: #f0f4f8;
     padding: 2px 6px;
@@ -589,16 +607,16 @@ header h1 {
         margin: 10px 0;
         border-radius: 6px;
     }
-    
+
     .code-block {
         padding: 12px 15px;
     }
-    
+
     .code-block code {
         font-size: 0.8rem;
         line-height: 1.6;
     }
-    
+
     .code-lang {
         font-size: 0.7rem;
     }
@@ -608,8 +626,8 @@ header h1 {
     .code-block code {
         font-size: 0.75rem;
     }
-    
+
     .code-block {
         padding: 10px 12px;
     }
-} 
+}
