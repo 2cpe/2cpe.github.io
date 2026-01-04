@@ -1,11 +1,14 @@
 // Define questions array in a way that works in both browser and module environments
 (function(global) {
-    // Updated PL/SQL Questions from uploaded files
+    // Updated PL/SQL Questions with 1-based indexing
+    // True/False: 1 = True (صح), 2 = False (خطأ)
+    // Multiple Choice: 1, 2, 3, 4 based on option order
+    
     const questions = [
         {
             question: "تعريف المتغير التالي صحيح: v_valid Boolean := false",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            correctAnswer: 1, // صح
             score: 1.00
         },
         {
@@ -16,7 +19,7 @@
                 "400 200 20",
                 "10 100 10"
             ],
-            correctAnswer: 1, // 200 202 402
+            [cite_start]correctAnswer: 2, // 200 202 402 [cite: 8]
             score: 1.00
         },
         {
@@ -27,13 +30,13 @@
                 "Value of a is 50",
                 "Value of a is 75"
             ],
-            correctAnswer: 0, // None of the values is matching: 100
+            [cite_start]correctAnswer: 1, // None of the values is matching: 100 [cite: 14]
             score: 1.00
         },
         {
             question: "تعريف المتغير التالي صحيح: v_date DATE NOT NULL := SYSDATE",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            [cite_start]correctAnswer: 1, // صح [cite: 16]
             score: 1.00
         },
         {
@@ -44,7 +47,7 @@
                 "Error",
                 "5"
             ],
-            correctAnswer: 3, // 5
+            [cite_start]correctAnswer: 4, // 5 [cite: 17]
             score: 1.00
         },
         {
@@ -55,7 +58,7 @@
                 "Abdul",
                 "Ahmed"
             ],
-            correctAnswer: 1, // يوجد خطأ في الكود (بسبب وجود End if بدون If وعدم تعريف V_name)
+            [cite_start]correctAnswer: 2, // يوجد خطأ في الكود [cite: 18]
             score: 1.00
         },
         {
@@ -66,7 +69,7 @@
                 "==",
                 "=:"
             ],
-            correctAnswer: 0, // :=
+            [cite_start]correctAnswer: 1, // := [cite: 45]
             score: 1.00
         },
         {
@@ -77,43 +80,43 @@
                 "// هنا التعليق",
                 "-- هنا التعليق"
             ],
-            correctAnswer: 3, // -- هنا التعليق
+            [cite_start]correctAnswer: 4, // -- هنا التعليق [cite: 21, 36]
             score: 1.00
         },
         {
             question: "المتغير الثابت constant متغير يحتفظ بقيمته أثناء تنفيذ الوحدة البرمجية.",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            correctAnswer: 1, // صح
             score: 1.00
         },
         {
             question: "في تعريف المتغيرات يمكن تعريف متغير بالاعتماد على متغير آخر (مثل استخدام %TYPE).",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            [cite_start]correctAnswer: 1, // صح [cite: 22]
             score: 1.00
         },
         {
             question: "في الوحدة البرمجية يتم كتابة قسم الإستثناءات في منطقة التنفيذ (Begin block).",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // خطأ (يُكتب بعد منطقة التنفيذ وقبل End)
+            correctAnswer: 2, // خطأ
             score: 1.00
         },
         {
             question: "لغة PL/SQL هي امتداد للغة الـ SQL بإضافة مميزات لغة البرمجة الإجرائية.",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            correctAnswer: 1, // صح
             score: 1.00
         },
         {
             question: "يتم تعريف المتغير في منطقة الـ Declare وهو عبارة عن مكان بالذاكرة المؤقتة لحفظ قيمة معينة.",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            [cite_start]correctAnswer: 1, // صح [cite: 23]
             score: 1.00
         },
         {
             question: "تعتبر منطقة الجزء التنفيذي الـ Begin منطقة اختيارية في الوحدة البرمجية.",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // خطأ (هي المنطقة الإلزامية الوحيدة)
+            correctAnswer: 2, // خطأ
             score: 1.00
         },
         {
@@ -124,19 +127,19 @@
                 "v num VARCHAR2(20);",
                 "begin VARCHAR2(20);"
             ],
-            correctAnswer: 1, // v_num
+            [cite_start]correctAnswer: 2, // v_num [cite: 24]
             score: 1.00
         },
         {
             question: "متغير حلقة التكرار for loop يتم تعريفه ضمنياً.",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            [cite_start]correctAnswer: 1, // صح [cite: 25]
             score: 1.00
         },
         {
             question: "تستخدم المتغيرات لإضافة وتعديل البيانات الموجودة في قواعد البيانات ويمكن استخدامها أكثر من مرة.",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            correctAnswer: 1, // صح
             score: 1.00
         },
         {
@@ -147,37 +150,37 @@
                 "10",
                 "11"
             ],
-            correctAnswer: 3, // 11
+            [cite_start]correctAnswer: 4, // 11 [cite: 29]
             score: 1.00
         },
         {
             question: "هل تم كتابة جملة الشرط التالية بشكل صحيح:\nIF condition THEN\ncode ;\nEND IF;",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            [cite_start]correctAnswer: 1, // صح [cite: 30, 35]
             score: 1.00
         },
         {
             question: "تعريف المتغير صحيح: v_x, V_y number(4);",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // خطأ (لا يمكن تعريف متغيرين بفاصلة في سطر واحد في PL/SQL)
+            [cite_start]correctAnswer: 2, // خطأ [cite: 31]
             score: 1.00
         },
         {
             question: "تعريف المتغير صحيح: V_x varchar2(25);",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            [cite_start]correctAnswer: 1, // صح [cite: 32]
             score: 1.00
         },
         {
             question: "جمل التعامل والاستعلام الخاصة بلغة الـ SQL يتم إدراجها داخل أكواد لغة الـ PL/SQL.",
             options: ["صح", "خطأ"],
-            correctAnswer: 0, // صح
+            correctAnswer: 1, // صح
             score: 1.00
         },
         {
             question: "تعريف المتغير صحيح: v_empno employee_id.employees%type",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // خطأ (الصيغة الصحيحة: table_name.column_name%type أي employees.employee_id%type)
+            [cite_start]correctAnswer: 2, // خطأ [cite: 50]
             score: 1.00
         }
     ];
