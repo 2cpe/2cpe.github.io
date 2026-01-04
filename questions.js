@@ -1,8 +1,3 @@
-بناءً على الملفات التي قمت برفعها (`1.txt` و `2.txt`) والتي تحتوي على أسئلة في لغة برمجة **PL/SQL**، قمت بدمج الأسئلة، حذف المكرر منها، وحلّها (تحديد الإجابات الصحيحة) وتنسيقها داخل ملف `JavaScript` بنفس الهيكلية التي طلبتها في ملف `questions.js`.
-
-إليك الكود الجاهز (يمكنك نسخ هذا المحتوى واستبدال ما بداخل ملف `questions.js` به):
-
-```javascript
 // Define questions array in a way that works in both browser and module environments
 (function(global) {
     // Updated PL/SQL Questions from uploaded files
@@ -239,5 +234,3 @@
     console.log(`Loaded ${questions.length} questions`);
 
 })(typeof window !== 'undefined' ? window : this); // This works in both browser and Node.js
-
-```
