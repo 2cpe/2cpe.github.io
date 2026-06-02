@@ -1,442 +1,810 @@
 // Define questions array in a way that works in both browser and module environments
 (function (global) {
-    // PL/SQL Questions - All unique questions from 1.txt and 2.txt with correct answers
+    // Android Questions - الاجهزة الذكية - All questions with correct answers
     const questions = [
-        // ==================== Questions from 1.txt ====================
+        // ==================== الجزء النظري - اختيار من متعدد (30 سؤال) ====================
 
-        // سؤال 1 من 1.txt
         {
-            question: "تعريف المتغير صحيح ؟",
-            code: "V_x                 varchar2(25);",
+            question: "Android هو:",
+            options: ["مغلق المصدر", "مفتوح المصدر", "خاص بشركة Apple", "لا يدعم التطبيقات"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "نظام الأندرويد هو نظام تم انشاءه على نواة:",
+            options: ["Windows", "Linux", "Mac", "DOS"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "واحدة ليست من الطبقات الرئيسية لنظام الأندرويد:",
+            options: ["Shell", "Linux Kernel", "Libraries", "Applications"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "الشركة المطورة لنظام Android:",
+            options: ["Microsoft", "Apple", "Google", "IBM"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "Android يسيطر على:",
+            options: ["أقل من 20%", "50%", "أكثر من 85%", "10%"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "لغة البرمجة الأساسية للأندرويد:",
+            options: ["Python", "Java", "C++", "Swift"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "من مميزات Android:",
+            options: ["مغلق المصدر", "لا يدعم الإنترنت", "مفتوح المصدر", "محدود"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "SQLite تستخدم لـ:",
+            options: ["التصميم", "التخزين", "الرسم", "الصوت"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Linux Kernel مسؤولة عن:",
+            options: ["UI", "إدارة الموارد", "التصميم", "البيانات"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Application Framework مسؤولة عن:",
+            options: ["تشغيل النظام", "إدارة التطبيقات", "النواة", "التخزين"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "من طبقات Android:",
+            options: ["Kernel", "Libraries", "Applications", "جميع ما سبق"],
+            correctAnswer: 4,
+            score: 1.00
+        },
+
+        {
+            question: "WebKit يستخدم لـ:",
+            options: ["الصوت", "الإنترنت", "الكاميرا", "التخزين"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Multi-tasking تعني:",
+            options: ["تطبيق واحد", "تطبيقين فقط", "تشغيل عدة تطبيقات", "إغلاق التطبيقات"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "Android يعمل على:",
+            options: ["الهواتف فقط", "الحاسب فقط", "أجهزة متعددة", "لا شيء"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "GPS يستخدم لـ:",
+            options: ["لتحديد الصوت", "لتحديد الموقع", "لتحديد الفيديو", "لتحديد النص"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Bluetooth يستخدم لـ:",
+            options: ["الإنترنت فقط", "الاتصال", "التخزين", "التصميم"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "ART هو:",
+            options: ["قاعدة بيانات", "آلة افتراضية", "لغة", "واجهة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Dalvik:",
+            options: ["نظام تشغيل", "آلة افتراضية", "تطبيق", "مكتبة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "API تستخدم لـ:",
+            options: ["الألعاب", "التفاعل مع النظام", "الصوت", "الصور"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Android Studio هو:",
+            options: ["لغة برمجة", "بيئة تطوير", "نظام", "تطبيق"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Emulator يستخدم لـ:",
+            options: ["التصميم", "محاكاة الجهاز", "تخزين البيانات", "الشبكة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Broadcast Receiver:",
+            options: ["واجهة", "استقبال الأحداث", "تخزين", "رسم"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Content Provider:",
+            options: ["عرض البيانات", "مشاركة البيانات", "الصوت", "التصميم"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Application Layer:",
+            options: ["أدنى طبقة", "أعلى طبقة", "وسط", "غير موجودة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Hardware layer:",
+            options: ["واجهة", "عتاد", "تطبيق", "قاعدة بيانات"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Android SDK:",
+            options: ["برنامج", "أدوات تطوير", "نظام", "تطبيق"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "هو عبارة عن اي شاشة تراها في تطبيقك:",
+            options: ["Activity", "Intent", "Service", "Content Provider"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "هو المسافة بين محتوى العنصر وحدوده:",
+            options: ["Margin", "Padding", "Orientation", "drawable"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "عند ادراج صورة الى التطبيق فإننا نتعامل مع مجلد:",
+            options: ["drawable", "Values", "XML", "JAVA"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "ينقسم نظام الاندرويد الى ...... طبقات:",
+            options: ["7", "6", "5", "4"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        // ==================== الجزء النظري - صح أو خطأ (25 سؤال) ====================
+
+        {
+            question: "Android مفتوح المصدر",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح - تعريف صحيح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 2 من 1.txt
         {
-            question: "أوجد مخرجات الوحدة البرمجيه التاليه:",
-            code: `Begin 
-
-for i in 5..5 loop
-
-Dbms_output.put_line(i); 
-
-end loop; 
-
-end;`,
-            options: ["i", "Error", "loop", "5"],
-            correctAnswer: 4, // 5 - الحلقة تعمل مرة واحدة فقط لأن البداية والنهاية نفس القيمة
-            score: 1.00
-        },
-
-        // سؤال 3 من 1.txt
-        {
-            question: "جمل التعامل والإستعلام الخاصة بلغة الـ SQL يتم إدراجها داخل أكواد لغة الـ PL/SQL",
+            question: "يعتمد على Linux",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 4 من 1.txt
         {
-            question: "تستخدم المتغيرات لإضافة وتعديل البيانات الموجودة في قواعد البيانات ويمكن إستخدامها أكثر من مرة",
+            question: "لا يمكن تعديله",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال 5 من 1.txt
         {
-            question: "في الوحدة البرمجية يتم كتابة قسم الإستثناءات في منطقة التنفيذ",
+            question: "يدعم Bluetooth",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح - قسم EXCEPTION يكون داخل BEGIN..END
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 6 من 1.txt
         {
-            question: "أوجد مخرجات الوحدة البرمجيه التاليه:",
-            code: `Declare    
-
-v_ename     char(20) := 'Ahmed';
-
-Begin
-
-V_name := 'Abdul';
-
-Dbms_output.put_line(v_ename);
-
-End if;   End;`,
-            options: ["NULL", "يوجد خطأ في الكود", "Abdul", "Ahmed"],
-            correctAnswer: 2, // يوجد خطأ في الكود - V_name غير معرف و End if بدون If
-            score: 1.00
-        },
-
-        // سؤال 7 من 1.txt
-        {
-            question: "هل تم كتابة جملة الشرط التالية بشكل صحيح:",
-            code: `IF condition THEN
-
-     code ;
-
-END IF;`,
+            question: "لا يدعم GPS",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال 8 من 1.txt
         {
-            question: "لإضافة تعليق بسطر واحد نستخدم الطريقة التالية:",
-            options: ["جميع ما سبق", "-- هنا التعليق", "/* هنا التعليق", "// هنا التعليق"],
-            correctAnswer: 2, // -- هنا التعليق
-            score: 1.00
-        },
-
-        // سؤال 9 من 1.txt
-        {
-            question: "تعريف المتغير صحيح ؟",
-            code: "V_y, v_x              number(4);",
+            question: "يستخدم SQLite",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ - لا يمكن تعريف متغيرين في نفس السطر في PL/SQL
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 10 من 1.txt
         {
-            question: "تعريف المتغير صحيح ؟",
-            code: "v_date  DATE   NOT   NULL  :=  SYSDATE",
+            question: "ART أسرع من Dalvik",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح - تعريف صحيح مع NOT NULL ويجب إعطاء قيمة
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 11 من 1.txt
         {
-            question: "المتغير الثابت constant متغير يحتفظ بقيمته اثناء تنفيذ الوحدة البرمجية",
+            question: "لا يدعم Multi-tasking",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال 12 من 1.txt
         {
-            question: "في تعريف المتغيرات يمكن تعريف متغير بالأعتماد على متغير أخر.",
+            question: "يعمل على أجهزة متعددة",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح - باستخدام %TYPE
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 13 من 1.txt
         {
-            question: "اوجد مخرجات الوحدة البرمجية التالية:",
-            code: `DECLARE 
-
- a number(3) := 100;
-
-BEGIN 
-
- IF (a = 50 ) THEN   
-
-  dbms_output.put_line('Value of a is 50' ); 
-
- ELSIF ( a = 75 ) THEN
-
-    dbms_output.put_line('Value of a is 75' );   
-
-ELSE     
-
-   dbms_output.put_line('None of the values is matching:  '|| a ); 
-
- END IF; 
-
-END;`,
-            options: ["Value of a is 50", "None of the values is matching: 100", "Value of a is 75", "None of the values is matching:"],
-            correctAnswer: 2, // None of the values is matching: 100
-            score: 1.00
-        },
-
-        // سؤال 14 من 1.txt
-        {
-            question: "لغة PL/SQL هي إمتداد للغة الـ SQL بإضافة مميزات لغة البرمجة الإجرائية",
+            question: "Application Framework غير مهم",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال 15 من 1.txt
         {
-            question: "أي من العلامات التالية تستخدم لإعطاء المتغير قيمة معينة:",
-            options: [":=", "=", "==", "=:"],
-            correctAnswer: 1, // :=
-            score: 1.00
-        },
-
-        // سؤال 16 من 1.txt
-        {
-            question: "اوجد مخرجات الوحدة البرمجية التالية:",
-            code: `DECLARE   
-
-x    number := 10;
-
-BEGIN   
-
-LOOP         
-
- x := x + 1;       
-
-   IF x >= 11 THEN   
-
-         dbms_output.put_line(x); 
-
-           exit;         
-
-  END IF;    
-
- dbms_output.put_line('After Exit x is: ' || x); 
-
-End loop;
-
-END;`,
-            options: ["11", "20", "10", "X"],
-            correctAnswer: 1, // 11
-            score: 1.00
-        },
-
-        // سؤال 17 من 1.txt
-        {
-            question: "تعتبر منطقة الجزء التنفيذي الـ Begin منطقة اختياريه في الوحدة البرمجيه",
+            question: "Kernel تدير الموارد",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ - BEGIN إجبارية
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 18 من 1.txt
         {
-            question: "تعريف المتغير صحيح ؟",
-            code: "v_empno            employee_id.employees%type;",
+            question: "يمكن تشغيل أكثر من تطبيق",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ - الترتيب خاطئ، يجب أن يكون employees.employee_id%TYPE
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 19 من 1.txt
         {
-            question: "يتم تعريف المتغير في منطقه ال Declare وهو عبارة عن مكان بالذاكرة المؤقتة لحفظ قيمة معينة.",
+            question: "لا يدعم الإنترنت",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال 20 من 1.txt
         {
-            question: "أوجد مخرجات الوحدة البرمجيه التاليه:",
-            code: `Declare
-
-V_num1      number  :=  10 ;    
-V_num2       number  := 100 ;    
-V_result      number := 0 ;
-
-Begin
-V_num1 :=  V_num2  *   2 ;   
-V_num2 :=  V_num1 +  2 ;       
-V_result := V_num1 + V_num2;
-Dbms_output.put_line(V_num1 ||  '       '  || V_num2 ||  '      '  || v_result);
-End ;`,
-            options: ["10          202                 400", "400         200          20", "10      100       10", "200              202              402"],
-            correctAnswer: 4, // 200, 202, 402
-            score: 1.00
-        },
-
-        // ==================== Unique Questions from 2.txt ====================
-
-        // سؤال 1 من 2.txt (فريد)
-        {
-            question: "تعريف المتغير صحيح ؟",
-            code: "v_valid        Boolean      :=  false;",
+            question: "WebKit للمتصفح",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح - تعريف صحيح لمتغير Boolean
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال 15 من 2.txt (فريد)
         {
-            question: "أي من المتغيرات التالية تم تعريفه بشكل صحيح:",
-            options: ["3v_num  VARCHAR2(20);", "v_num  VARCHAR2(20);", "v num  VARCHAR2(20);", "begin  VARCHAR2(20);"],
-            correctAnswer: 2, // v_num VARCHAR2(20); - الاسم يبدأ بحرف ولا يحتوي مسافات وليس كلمة محجوزة
-            score: 1.00
-        },
-
-        // سؤال 16 من 2.txt (فريد)
-        {
-            question: "متغير حلقة التكرار for loop يتم تعريفه ضمنياً:",
+            question: "Android Studio IDE",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح - متغير الحلقة يُعرّف تلقائياً
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // ==================== New Questions - Cursors, Procedures, Functions, Exceptions ====================
-
-        // سؤال جديد - PROCEDURE
         {
-            question: "ما هو اسم الـ PROCEDURE في الكود التالي:",
-            code: `CREATE OR REPLACE PROCEDURE squareNum(x IN OUT NUMBER) IS
-BEGIN
-    x := x * x;
-END;`,
-            options: ["CREATE", "squareNum", "x", "PROCEDURE"],
-            correctAnswer: 2, // squareNum
-            score: 1.00
-        },
-
-        // سؤال جديد - استثناء No_data_found
-        {
-            question: "استثناء No_data_found ينطلق عندما الـ Select لا تجد صفوف تحقق شروطها.",
+            question: "Emulator جهاز حقيقي",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال جديد - SQL%NOTFOUND
         {
-            question: "الخاصية SQL%NOTFOUND عند عدم وجود بيانات تقوم بإرجاع:",
-            options: ["FALSE", "TRUE", "NULL", "0"],
-            correctAnswer: 2, // TRUE
-            score: 1.00
-        },
-
-        // سؤال جديد - تعريف واستدعاء الخطأ
-        {
-            question: "عند تعريف الخطأ التالي: ex_invalid_id EXCEPTION، ما هو الأمر الصحيح الذي يستدعي الخطأ أعلاه؟",
-            options: [
-                "IF c_id <= 0 THEN CALL ex_invalid_id;",
-                "IF c_id <= 0 THEN RAISE ex_invalid_id;",
-                "IF c_id <= 0 THEN THROW ex_invalid_id;",
-                "IF c_id <= 0 THEN ERROR ex_invalid_id;"
-            ],
-            correctAnswer: 2, // IF c_id <= 0 THEN RAISE ex_invalid_id;
-            score: 1.00
-        },
-
-        // سؤال جديد - %ISOPEN
-        {
-            question: "أي مما يلي تقوم بإرجاع true إذا كان المؤشر مفتوحاً؟",
-            options: ["%FOUND", "%NOTFOUND", "%ISOPEN", "%ROWCOUNT"],
-            correctAnswer: 3, // %ISOPEN
-            score: 1.00
-        },
-
-        // سؤال جديد - وظيفة المؤشر
-        {
-            question: "ما هي وظيفة المؤشر التالي:",
-            code: `Cursor Emp_Cursor is 
-Select Employee_Id, Last_Name 
-From Employees 
-Where Department_Id = 30;`,
-            options: [
-                "يقوم بإستخراج جميع بيانات الموظفين",
-                "يقوم بإستخراج اسماء وارقام موظفي الإدارة رقم 30",
-                "يقوم بحذف موظفي الإدارة رقم 30",
-                "يقوم بتحديث بيانات الإدارة رقم 30"
-            ],
-            correctAnswer: 2, // يقوم بإستخراج اسماء وارقام موظفي الإدارة رقم 30
-            score: 1.00
-        },
-
-        // سؤال جديد - %FOUND
-        {
-            question: "في الـ cursor الضمني، الخاصية التي ترجع true عند تأثر الصفوف بتعليمات DML:",
-            options: ["%ISOPEN", "%NOTFOUND", "%FOUND", "%ROWCOUNT"],
-            correctAnswer: 3, // %FOUND
-            score: 1.00
-        },
-
-        // سؤال جديد - RECORD
-        {
-            question: "السجل RECORD هو عبارة عن متغير يحمل بداخله أكثر من قيمة.",
+            question: "APIs مهمة للتطوير",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - إعادة فتح الكرسور
         {
-            question: "يمكن إعادة فتح الكرسور قبل إغلاقه.",
+            question: "SQLite قاعدة بيانات",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ - يجب إغلاقه أولاً
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - PROCEDURE Parameters
         {
-            question: "قد تأخذ الـ PROCEDURE معطيات PARAMETERS وقد لا تأخذ.",
+            question: "Content Provider لمشاركة البيانات",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - معالجة الأخطاء
         {
-            question: "نستطيع في لغة PL/SQL معالجة الأخطاء وإظهارها بالشكل الذي نريده.",
+            question: "Broadcast Receiver يستقبل أحداث",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - Explicit Cursor
         {
-            question: "الـ Explicit Cursor ليس من النوع الضمني حيث أن المبرمج هو من يقوم بتعريفه ومن ثم فتحه وتعبئته وغلقه.",
+            question: "Android يعمل على التلفاز",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - الدالة و return
         {
-            question: "يجب أن تحتوي الدالة على الأمر return.",
+            question: "Kernel مسؤولة عن UI",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال جديد - تعريف الكرسور
         {
-            question: "يتم تعريف الكرسور في منطقة الـ Declare وهو عبارة عن تعليمة Select.",
+            question: "Java لغة أساسية",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - SQLCODE
         {
-            question: "الأمر SQLCODE يرجع لنا نص رسالة الـ ERROR.",
+            question: "Android مغلق المصدر",
             options: ["صح", "خطأ"],
-            correctAnswer: 2, // خطأ - SQLCODE يرجع رقم الخطأ، بينما SQLERRM يرجع النص
+            correctAnswer: 2,
             score: 1.00
         },
 
-        // سؤال جديد - CLOSE cursor
         {
-            question: "تعليمة CLOSE تقوم بإلغاء منطقة الـ active set وإرجاع البيانات إلى BD.",
+            question: "Google طورت Android",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - OPEN cursor
+        // ==================== الجزء العملي - اختيار من متعدد (34 سؤال) ====================
+
         {
-            question: "ما هي التعليمة التي تقوم بتنفيذ جملة الاستعلام وجلب البيانات الى الـ active set في المؤشرات الصريحة:",
-            options: ["Declare cursor", "Fetch cursor", "Close cursor", "Open cursor"],
-            correctAnswer: 4, // Open cursor
+            question: "يتم إنشاء الواجهة باستخدام:",
+            options: ["XML و Java", "HTML و XML", "Java و HTML", "HTML و C"],
+            correctAnswer: 1,
             score: 1.00
         },
 
-        // سؤال جديد - تعريف Cursor
         {
-            question: "يعتبر المؤشر (Cursor) مساحة في الرام تقوم أوراكل بتجهيزها تلقائيا مع كل جملة SQL وتضع بها البيانات القادمة منها.",
+            question: 'معنى android:layout_width="match_parent":',
+            options: ["يقوم بتكبير العنصر بحجم العنصر", "يقوم بتكبير العنصر بعرض الشاشة", "يقوم بتكبير العنصر بطول الشاشة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "LinearLayout:",
+            options: ["نسبي", "خطي", "جدولي", "ثابت"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "الكلاس المسؤول عن إنشاء قواعد البيانات في الأندرويد ستوديو:",
+            options: ["DatabaseManger", "SQLBuilder", "SQLiteOpenHelper", "RoomHelper"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "TextView:",
+            options: ["إدخال", "عرض نص", "زر", "صورة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "EditText:",
+            options: ["عرض", "إدخال", "زر", "صورة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Button:",
+            options: ["عرض نص", "إدخال", "تنفيذ أمر", "صورة"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "ImageButton:",
+            options: ["نص", "صورة", "إدخال", "صوت"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "CheckBox:",
+            options: ["اختيار واحد", "اختيار متعدد", "إدخال", "عرض"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "RadioButton:",
+            options: ["متعدد", "واحد", "نص", "صورة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "ListView:",
+            options: ["صورة", "قائمة", "نص", "زر"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "wrap_content:",
+            options: ["كامل الشاشة", "حسب المحتوى", "ثابت", "مخفي"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "match_parent:",
+            options: ["حسب المحتوى", "كامل الشاشة", "مخفي", "صغير"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "layout_width:",
+            options: ["الطول", "العرض", "اللون", "النص"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "layout_height:",
+            options: ["العرض", "الطول", "النص", "اللون"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "id:",
+            options: ["لون", "تعريف", "حجم", "نص"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "hint:",
+            options: ["نص ثابت", "نص مؤقت", "لون", "صورة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "orientation:",
+            options: ["لون", "اتجاه", "حجم", "نص"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "gravity:",
+            options: ["مكان العنصر", "محتوى العنصر", "لون", "حجم"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "layout_gravity:",
+            options: ["محتوى", "موقع العنصر", "لون", "نص"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "XML:",
+            options: ["لغة برمجة", "لغة وصف", "قاعدة بيانات", "نظام"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Java تستخدم لـ:",
+            options: ["التصميم", "المنطق", "التخزين", "الرسم"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Event:",
+            options: ["نص", "تفاعل", "صورة", "لون"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Button click:",
+            options: ["حدث", "نص", "صورة", "لون"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "Layout:",
+            options: ["عنصر", "ترتيب", "نص", "صورة"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "View:",
+            options: ["مخطط", "عنصر", "قاعدة بيانات", "نظام"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "الخطوط في الاندرويد نعرفها بـ:",
+            options: ["dp", "px", "sp", "mm"],
+            correctAnswer: 3,
+            score: 1.00
+        },
+
+        {
+            question: "المفقود ما بداخل الأقواس: findViewById(R.----.btn)",
+            options: ["id", "Name", "Type", "Size"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "وظيفة setContentView():",
+            options: ["تحديد لون الخلفية", "إضافة رسالة", "إنشاء نشاط جديد", "تحديد التخطيط الرئيسي"],
+            correctAnswer: 4,
+            score: 1.00
+        },
+
+        {
+            question: "أي من الأكواد التالية يُستخدم لإنشاء AlertDialog بسيط:",
+            options: ["AlertDialog.Builder(context);", 'AlertDialog.show(context, "Title", "Message");', "AlertDialog.create(context);", "AlertDialog.newInstance(context);"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "أي من الأسطر التالية يستخدم لإنشاء Explicit Intent للإنتقال من Activity1 الى Activity2:",
+            options: ['Intent intent = new Intent("Activity2");', "Intent intent = new Intent(); intent.setAction(\"Activity2\");", "Intent intent = new Intent();", "Intent intent = new Intent(Activity1.this, Activity2.class);"],
+            correctAnswer: 4,
+            score: 1.00
+        },
+
+        {
+            question: "هي دالة تستدعى مره واحده فقط عند انشاء قاعدة البيانات ويتم من خلالها انشاء الجدول هي:",
+            options: ["onCreate", "onStart", "onUpgrade", "onConstructor"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "يستخدم ............ لإدخال البيانات للجدول:",
+            options: ["db.rawQuery", "db.setText", "db.getVersion", "db.execSQL"],
+            correctAnswer: 4,
+            score: 1.00
+        },
+
+        {
+            question: "الشكل المعروض هو وهو احد عناصر القوائم والمزودات:",
+            options: ["Spinner", "ListView", "GridView", "ScrollView"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        // ==================== الجزء العملي - صح أو خطأ (25 سؤال) ====================
+
+        {
+            question: "يمكن إنشاء UI بـ XML",
             options: ["صح", "خطأ"],
-            correctAnswer: 1, // صح
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "يمكن استخدام Java للتفاعل",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "LinearLayout أفقي فقط",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "RelativeLayout يعتمد على العناصر",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "TextView للإدخال",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "EditText للإدخال",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "Button ينفذ أمر",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "ListView قائمة",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "wrap_content يملأ الشاشة",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "match_parent يملأ الشاشة",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "id معرف العنصر",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "hint نص مؤقت",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "XML لغة برمجة",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "Java تتحكم في الأحداث",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "orientation تحدد الاتجاه",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "gravity تحدد موقع العنصر",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "layout_gravity تحدد موقع العنصر",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "يمكن دمج XML و Java",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "Checkbox اختيار واحد",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "RadioButton اختيار واحد",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "ImageButton يعرض صورة",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "Layout يمكن أن يحتوي Layout آخر",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "View عنصر واجهة",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
+            score: 1.00
+        },
+
+        {
+            question: "لا يمكن تغيير الخصائص",
+            options: ["صح", "خطأ"],
+            correctAnswer: 2,
+            score: 1.00
+        },
+
+        {
+            question: "الأحداث مهمة للتفاعل",
+            options: ["صح", "خطأ"],
+            correctAnswer: 1,
             score: 1.00
         }
     ];
@@ -490,6 +858,6 @@ Where Department_Id = 30;`,
     saveQuestions();
 
     // Log questions loaded for debugging
-    console.log(`Loaded ${questions.length} unique questions (duplicates removed)`);
+    console.log(`Loaded ${questions.length} Android questions`);
 
 })(typeof window !== 'undefined' ? window : this);

@@ -96,7 +96,7 @@ function displayQuestion() {
 
         const codeHeader = document.createElement('div');
         codeHeader.className = 'code-block-header';
-        codeHeader.innerHTML = '<span class="code-lang">PL/SQL</span>';
+        codeHeader.innerHTML = '<span class="code-lang">Java/XML</span>';
         codeContainer.appendChild(codeHeader);
 
         const codeBlock = document.createElement('pre');
