@@ -1,579 +1,494 @@
-let currentQuestionIndex = 0;
-let score = 0;
-let answers = [];
-let startTime = new Date();
-let questions = []; // Initialize questions array
+(() => {
+    'use strict';
 
-const questionText = document.getElementById('question-text');
-const optionsContainer = document.getElementById('options-container');
-const currentQuestionSpan = document.getElementById('current-question');
-const prevBtn = document.getElementById('prev-btn');
-const nextBtn = document.getElementById('next-btn');
-const examDate = document.getElementById('exam-date');
-const timerElement = document.getElementById('timer');
-const scoreElement = document.getElementById('score');
-const statusIndicator = document.getElementById('status-indicator');
-const loadingIndicator = document.getElementById('loading-indicator');
+    /* ============================================================
+       DOM REFERENCES
+       ============================================================ */
+    const $ = (id) => document.getElementById(id);
 
-// Log for debugging
-function logDebug(message) {
-    console.log(`[Debug] ${message}`);
-}
+    const themeBtn = $('theme-toggle');
+    const examThemeBtn = $('exam-theme-toggle');
+    const subjectScreen = $('subject-screen');
+    const examScreen = $('exam-screen');
+    const subjectGrid = $('subject-grid');
+    const skeleton = $('skeleton-grid');
+    const subjectLoading = $('subject-loading');
+    const modal = $('unavailable-modal');
+    const modalMsg = $('unavailable-message');
+    const modalClose = $('modal-close-btn');
+    const resultModal = $('result-modal');
+    const resultClose = $('result-close-btn');
+    const confirmModal = $('confirm-modal');
+    const confirmYes = $('confirm-yes-btn');
+    const confirmNo = $('confirm-no-btn');
+    const toast = $('toast');
+    const backBtn = $('back-to-subjects-btn');
+    const examSubjectDisplay = $('exam-subject-display');
+    const examSubjectSide = $('exam-subject-side');
+    const questionGrid = $('exam-question-grid');
+    const progressBar = $('progress-bar');
+    const progressText = $('exam-progress-text');
+    const currentQSpan = $('current-question');
+    const questionText = $('question-text');
+    const optionsContainer = $('options-container');
+    const prevBtn = $('prev-btn');
+    const nextBtn = $('next-btn');
+    const statusIndicator = $('status-indicator');
+    const scoreSpan = $('score');
+    const sideScore = $('side-score');
+    const examDate = $('exam-date');
 
-// Helper function to detect if text is primarily Arabic
-function isArabicText(text) {
-    if (!text) return false;
-    // Arabic Unicode range: \u0600-\u06FF (Arabic), \u0750-\u077F (Arabic Supplement)
-    const arabicPattern = /[\u0600-\u06FF\u0750-\u077F]/;
-    // Check if text contains Arabic characters
-    return arabicPattern.test(text);
-}
+    /* ============================================================
+       STATE MANAGEMENT
+       ============================================================ */
+    const state = {
+        questions: [],
+        currentIndex: 0,
+        answers: {},    // { index: selectedOptionIndex }
+        subjectId: '',
+        subjectName: '',
+        icon: '',
+        totalScore: 0,
+        totalPossible: 0
+    };
 
-function initializeQuestionGrid() {
-    const grid = document.querySelector('.question-grid');
-    if (!grid) {
-        logDebug('Question grid not found');
-        return;
-    }
+    /* ============================================================
+       THEME CONTROLLER
+       ============================================================ */
+    const getTheme = () => localStorage.getItem('theme') || 'light';
 
-    logDebug(`Initializing grid with ${getTotalQuestions()} questions`);
-    for (let i = 0; i < getTotalQuestions(); i++) {
-        const btn = document.createElement('button');
-        btn.className = 'question-number-btn';
-        btn.textContent = i + 1;
-        btn.addEventListener('click', () => navigateToQuestion(i));
-        grid.appendChild(btn);
-    }
-    updateQuestionGrid();
-}
+    const setTheme = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    };
 
-function updateQuestionGrid() {
-    const buttons = document.querySelectorAll('.question-number-btn');
-    buttons.forEach((btn, index) => {
-        btn.classList.remove('current', 'correct', 'wrong');
-        if (index === currentQuestionIndex) {
-            btn.classList.add('current');
-        }
-        if (answers[index] !== null && answers[index] !== undefined) {
-            const question = getQuestion(index);
-            if (question && answers[index] + 1 === question.correctAnswer) {
-                btn.classList.add('correct');
-            } else {
-                btn.classList.add('wrong');
-            }
-        }
-    });
-}
+    const toggleTheme = () => {
+        const current = getTheme();
+        setTheme(current === 'light' ? 'dark' : 'light');
+    };
 
-function displayQuestion() {
-    if (!questionText || !optionsContainer || !currentQuestionSpan) {
-        logDebug('Missing DOM elements for question display');
-        return;
-    }
+    const initTheme = () => {
+        setTheme(getTheme());
+    };
 
-    const question = getQuestion(currentQuestionIndex);
-    if (!question) {
-        logDebug(`Question not found for index ${currentQuestionIndex}`);
-        questionText.textContent = "خطأ في تحميل السؤال";
-        return;
-    }
+    themeBtn.addEventListener('click', toggleTheme);
+    examThemeBtn.addEventListener('click', toggleTheme);
 
-    logDebug(`Displaying question ${currentQuestionIndex + 1}: ${question.question.substring(0, 20)}...`);
+    /* ============================================================
+       TOAST NOTIFICATIONS
+       ============================================================ */
+    let toastTimer = null;
 
-    // Clear previous question content
-    questionText.innerHTML = '';
+    const showToast = (message) => {
+        toast.textContent = message;
+        toast.classList.remove('hidden');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            toast.classList.add('hidden');
+        }, 3500);
+    };
 
-    // Add the question text
-    const questionTextElement = document.createElement('div');
-    questionTextElement.className = 'question-title';
-    questionTextElement.textContent = question.question;
-    questionText.appendChild(questionTextElement);
+    /* ============================================================
+       MODAL CONTROLLERS
+       ============================================================ */
+    const showModal = (message) => {
+        modalMsg.textContent = message;
+        modal.classList.remove('hidden');
+    };
 
-    // Add code block if exists
-    if (question.code) {
-        const codeContainer = document.createElement('div');
-        codeContainer.className = 'code-block-container';
+    const hideModal = () => {
+        modal.classList.add('hidden');
+    };
 
-        const codeHeader = document.createElement('div');
-        codeHeader.className = 'code-block-header';
-        codeHeader.innerHTML = '<span class="code-lang">Java/XML</span>';
-        codeContainer.appendChild(codeHeader);
+    /* ============================================================
+       CUSTOM DIALOG PROMISE (Replacement for blocking window.confirm)
+       ============================================================ */
+    const customConfirm = (message) => {
+        return new Promise((resolve) => {
+            $('confirm-message').textContent = message;
 
-        const codeBlock = document.createElement('pre');
-        codeBlock.className = 'code-block';
+            const cleanup = (result) => {
+                confirmModal.classList.add('hidden');
+                confirmYes.removeEventListener('click', onYes);
+                confirmNo.removeEventListener('click', onNo);
+                confirmModal.removeEventListener('click', onBackdrop);
+                document.removeEventListener('keydown', onKey);
+                resolve(result);
+            };
 
-        const codeElement = document.createElement('code');
-        codeElement.className = 'language-plsql';
-        codeElement.textContent = question.code;
+            const onYes = () => cleanup(true);
+            const onNo = () => cleanup(false);
+            const onBackdrop = (e) => { if (e.target === confirmModal) cleanup(false); };
+            const onKey = (e) => {
+                if (e.key === 'Escape') cleanup(false);
+                if (e.key === 'Enter') cleanup(true);
+            };
 
-        codeBlock.appendChild(codeElement);
-        codeContainer.appendChild(codeBlock);
-        questionText.appendChild(codeContainer);
-    }
+            confirmYes.addEventListener('click', onYes);
+            confirmNo.addEventListener('click', onNo);
+            confirmModal.addEventListener('click', onBackdrop);
+            document.addEventListener('keydown', onKey);
 
-    // Add image if it exists
-    if (question.image) {
-        const imageElement = document.createElement('img');
-        imageElement.src = question.image;
-        imageElement.alt = "Chart image for question";
-        imageElement.style.maxWidth = "100%";
-        imageElement.style.display = "block";
-        imageElement.style.margin = "15px auto";
-        imageElement.style.borderRadius = "4px";
-        imageElement.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-        questionText.appendChild(imageElement);
-    }
-
-    currentQuestionSpan.textContent = currentQuestionIndex + 1;
-
-    optionsContainer.innerHTML = '';
-
-    // Check if this is the matching question (question with صل بين المصطلحات)
-    if (question.question.includes('صل بين المصطلحات')) {
-        // Special handling for matching question
-        displayMatchingQuestion(question);
-    } else {
-        // Regular question display
-        question.options.forEach((option, index) => {
-            const optionElement = document.createElement('div');
-            optionElement.className = 'option';
-            if (answers[currentQuestionIndex] === index) {
-                optionElement.classList.add('selected');
-            }
-
-            // Detect if text is primarily Arabic or English/Code
-            const isArabic = isArabicText(option);
-            if (isArabic) {
-                optionElement.style.direction = 'rtl';
-                optionElement.style.textAlign = 'right';
-            } else {
-                optionElement.style.direction = 'ltr';
-                optionElement.style.textAlign = 'left';
-            }
-
-            optionElement.textContent = option;
-            optionElement.addEventListener('click', () => selectOption(index));
-            optionsContainer.appendChild(optionElement);
+            confirmModal.classList.remove('hidden');
+            setTimeout(() => { confirmYes.focus(); }, 50);
         });
-    }
+    };
 
-    updateNavButtons();
-    updateQuestionGrid();
-    updateStatus();
-}
-
-function displayMatchingQuestion(question) {
-    // Create a matching interface
-    const matchingContainer = document.createElement('div');
-    matchingContainer.className = 'matching-container';
-
-    // Extract terms and definitions from the options
-    const options = question.options;
-
-    // Create arrays to store terms and definitions
-    const terms = [];
-    const definitions = [];
-
-    // Parse options to extract terms and definitions
-    options.forEach(option => {
-        // Split at the colon to separate term from definition
-        const colonIndex = option.indexOf(':');
-        if (colonIndex !== -1) {
-            const term = option.substring(0, colonIndex).trim();
-            const definition = option.substring(colonIndex + 1).trim();
-            terms.push(term);
-            definitions.push(definition);
-        }
+    modalClose.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) hideModal();
     });
 
-    // Create table layout for matching
-    const table = document.createElement('table');
-    table.className = 'matching-table';
-    table.style.width = '100%';
-    table.style.borderCollapse = 'separate';
-    table.style.borderSpacing = '0 10px';
+    /* ============================================================
+       SUBJECT SELECTION PAGE
+       ============================================================ */
+    const renderSubjects = () => {
+        const subjects = getSubjectList();
+        skeleton.classList.add('hidden');
+        subjectGrid.innerHTML = '';
 
-    // Create header row
-    const headerRow = document.createElement('tr');
+        subjects.forEach((s) => {
+            const card = document.createElement('div');
+            card.className = 'subject-card';
+            card.dataset.id = s.id;
+            card.setAttribute('role', 'button');
+            card.setAttribute('tabindex', '0');
 
-    const defHeader = document.createElement('th');
-    defHeader.textContent = 'التعريف';
-    defHeader.style.padding = '10px';
-    defHeader.style.textAlign = 'right';
-    defHeader.style.color = '#43a047';
-    defHeader.style.fontWeight = 'bold';
-    defHeader.style.fontSize = '1.1rem';
-    defHeader.style.width = '40%';
+            const badgeStatus = s.available ? 'متاح' : 'غير متاح';
+            const badgeClass = s.available ? 'status-available' : 'status-unavailable';
 
-    const matchHeader = document.createElement('th');
-    matchHeader.textContent = 'اختر';
-    matchHeader.style.padding = '10px';
-    matchHeader.style.textAlign = 'center';
-    matchHeader.style.color = '#d32f2f';
-    matchHeader.style.fontWeight = 'bold';
-    matchHeader.style.fontSize = '1.1rem';
-    matchHeader.style.width = '20%';
+            card.innerHTML = `
+                <div class="subject-icon">${s.icon}</div>
+                <div class="subject-name">${s.name}</div>
+                <div class="subject-name-en">${s.nameEn}</div>
+                <div class="subject-status-badge ${badgeClass}">${badgeStatus}</div>
+            `;
 
-    const termHeader = document.createElement('th');
-    termHeader.textContent = 'المصطلح';
-    termHeader.style.padding = '10px';
-    termHeader.style.textAlign = 'right';
-    termHeader.style.color = '#1976d2';
-    termHeader.style.fontWeight = 'bold';
-    termHeader.style.fontSize = '1.1rem';
-    termHeader.style.width = '40%';
+            card.addEventListener('click', () => handleSubjectClick(s.id));
 
-    headerRow.appendChild(defHeader);
-    headerRow.appendChild(matchHeader);
-    headerRow.appendChild(termHeader);
-    table.appendChild(headerRow);
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleSubjectClick(s.id);
+                }
+            });
 
-    // Create rows for each term-definition pair
-    terms.forEach((term, termIndex) => {
-        const row = document.createElement('tr');
-        row.style.backgroundColor = '#f8f9fa';
-        row.style.borderRadius = '8px';
-        row.style.marginBottom = '10px';
+            subjectGrid.appendChild(card);
+        });
+    };
 
-        const termCell = document.createElement('td');
-        termCell.className = 'term-cell';
-        termCell.textContent = term;
-        termCell.style.padding = '15px';
-        termCell.style.backgroundColor = '#f0f8ff';
-        termCell.style.borderRadius = '0 8px 8px 0';
-        termCell.style.borderRight = '4px solid #1976d2';
-        termCell.style.fontWeight = '600';
-        termCell.style.color = '#1976d2';
+    const handleSubjectClick = (id) => {
+        showLoading(id);
 
-        const matchCell = document.createElement('td');
-        matchCell.style.textAlign = 'center';
-        matchCell.style.padding = '10px';
-        matchCell.style.backgroundColor = '#fff';
+        getSubjectAvailability(id).then((result) => {
+            hideLoading(id);
+            if (result.available) {
+                startExam(result.examData);
+            } else {
+                showModal(result.message);
+            }
+        }).catch(() => {
+            hideLoading(id);
+            showToast('حدث خطأ غير متوقع. حاول مرة أخرى.');
+        });
+    };
 
-        const defCell = document.createElement('td');
-        defCell.className = 'definition-cell';
-        defCell.style.padding = '15px';
-        defCell.style.backgroundColor = '#f5f5f5';
-        defCell.style.borderRadius = '8px 0 0 8px';
-        defCell.style.borderRight = '4px solid #43a047';
-
-        // Get the correct definition for this term
-        if (termIndex < definitions.length) {
-            defCell.textContent = definitions[termIndex];
-        }
-
-        // Create dropdown select menu
-        const selectElement = document.createElement('select');
-        selectElement.className = 'select-definition custom-select';
-        selectElement.id = `match-select-${termIndex}`;
-        selectElement.name = `match-select-${termIndex}`;
-        selectElement.style.width = '100%';
-        selectElement.style.padding = '8px';
-        selectElement.style.borderRadius = '4px';
-        selectElement.style.border = '1px solid #ddd';
-        selectElement.style.backgroundColor = '#fff';
-        selectElement.style.cursor = 'pointer';
-
-        // Add default option
-        const defaultOption = document.createElement('option');
-        defaultOption.value = "";
-        defaultOption.textContent = "إختر...";
-        selectElement.appendChild(defaultOption);
-
-        // Add all definitions as options
-        definitions.forEach((definition, defIndex) => {
-            const option = document.createElement('option');
-            option.value = defIndex.toString();
-            option.textContent = definition;
-            selectElement.appendChild(option);
-
-            // If there's a saved answer for this matching question
-            if (answers[currentQuestionIndex] &&
-                answers[currentQuestionIndex][termIndex] === defIndex) {
-                option.selected = true;
+    const showLoading = (id) => {
+        const cards = document.querySelectorAll('.subject-card');
+        cards.forEach((c) => {
+            if (c.dataset.id === id) {
+                c.classList.add('loading');
+                if (c.querySelector('.spinner')) return;
+                const spinner = document.createElement('div');
+                spinner.className = 'spinner';
+                spinner.style.cssText = 'width:20px;height:20px;margin-top:8px;border-width:2px;';
+                c.appendChild(spinner);
             }
         });
+    };
 
-        // Add change event listener
-        selectElement.addEventListener('change', (e) => {
-            const defIndex = parseInt(e.target.value);
-
-            // Save the match in the answers object
-            if (!answers[currentQuestionIndex]) {
-                answers[currentQuestionIndex] = {};
+    const hideLoading = (id) => {
+        const cards = document.querySelectorAll('.subject-card');
+        cards.forEach((c) => {
+            if (c.dataset.id === id) {
+                c.classList.remove('loading');
+                const sp = c.querySelector('.spinner');
+                if (sp) sp.remove();
             }
+        });
+    };
 
-            if (e.target.value === "") {
-                // If default "choose" option is selected, remove the answer
-                delete answers[currentQuestionIndex][termIndex];
-            } else {
-                // Save the selection
-                answers[currentQuestionIndex][termIndex] = defIndex;
-            }
+    /* ============================================================
+       EXAM INITIALIZATION
+       ============================================================ */
+    const startExam = (data) => {
+        state.questions = data.questions;
+        state.subjectId = data.subjectId;
+        state.subjectName = data.subjectName;
+        state.icon = data.icon || '';
+        state.currentIndex = 0;
+        state.answers = {};
+        state.totalScore = 0;
+        state.totalPossible = 0;
 
-            updateQuestionGrid();
-            updateScore();
-            updateStatus();
+        state.questions.forEach((q) => {
+            state.totalPossible += q.score || 1;
         });
 
-        matchCell.appendChild(selectElement);
+        examSubjectDisplay.textContent = `${state.icon} ${state.subjectName}`;
+        examSubjectSide.textContent = state.subjectName;
 
-        row.appendChild(defCell);
-        row.appendChild(matchCell);
-        row.appendChild(termCell);
-        table.appendChild(row);
+        const now = new Date();
+        const d = now.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        examDate.textContent = d;
+
+        subjectScreen.classList.add('hidden');
+        examScreen.classList.remove('hidden');
+        document.body.classList.add('exam-active');
+
+        renderQuestionGrid();
+        showQuestion(0);
+        updateProgress();
+        updateScore();
+    };
+
+    /* ============================================================
+       QUESTION RENDERING & OPTIONS SELECT
+       ============================================================ */
+    const showQuestion = (index) => {
+        const q = state.questions[index];
+        if (!q) return;
+
+        state.currentIndex = index;
+
+        if (q.code && q.code.length > 0) {
+            let codeHtml = '';
+            q.code.forEach((c) => {
+                codeHtml += `
+                    <div class="code-block-container">
+                        <div class="code-block-header">
+                            <span class="code-lang">${c.lang || 'Code'}</span>
+                        </div>
+                        <pre class="code-block"><code>${escapeHtml(c.content)}</code></pre>
+                    </div>
+                `;
+            });
+            questionText.innerHTML = q.question + codeHtml;
+        } else {
+            questionText.innerHTML = q.question;
+        }
+
+        currentQSpan.textContent = index + 1;
+
+        renderOptions(q, index);
+        updateStatus(index);
+        updateQuestionGrid();
+        updateProgress();
+        updateScore();
+    };
+
+    const renderOptions = (q, index) => {
+        optionsContainer.innerHTML = '';
+        const selected = state.answers[index];
+
+        q.options.forEach((opt, i) => {
+            const div = document.createElement('div');
+            div.className = `option${selected === i ? ' selected' : ''}`;
+            div.innerHTML = `
+                <span class="radio-dot"></span>
+                <span class="option-text">${escapeHtml(opt)}</span>
+            `;
+            div.addEventListener('click', () => selectOption(index, i));
+            optionsContainer.appendChild(div);
+        });
+    };
+
+    const selectOption = (qIndex, optIndex) => {
+        state.answers[qIndex] = optIndex;
+        renderOptions(state.questions[qIndex], qIndex);
+        updateStatus(qIndex);
+        updateScore();
+        updateQuestionGrid();
+    };
+
+    const updateStatus = (index) => {
+        const answered = state.answers[index] !== undefined;
+        statusIndicator.textContent = answered ? 'تمت الإجابة ✓' : 'لم تتم الإجابة';
+        statusIndicator.style.color = answered ? 'var(--success)' : 'var(--text-muted)';
+    };
+
+    const updateProgress = () => {
+        const total = state.questions.length;
+        const answered = Object.keys(state.answers).length;
+        const pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+        progressBar.style.width = `${pct}%`;
+        progressText.textContent = `${state.currentIndex + 1} / ${total}`;
+    };
+
+    const updateScore = () => {
+        let earned = 0;
+        let possible = 0;
+        state.questions.forEach((q, i) => {
+            possible += q.score || 1;
+            if (state.answers[i] !== undefined && state.answers[i] === (q.correctAnswer - 1)) {
+                earned += q.score || 1;
+            }
+        });
+        state.totalScore = earned;
+        state.totalPossible = possible;
+
+        const pct = possible > 0 ? ((earned / possible) * 100).toFixed(2) : '0.00';
+        scoreSpan.textContent = `${earned.toFixed(2)} من ${possible.toFixed(2)} (${pct}%)`;
+        sideScore.textContent = earned.toFixed(2);
+    };
+
+    /* ============================================================
+       SIDE PANEL INTERACTION
+       ============================================================ */
+    const renderQuestionGrid = () => {
+        questionGrid.innerHTML = '';
+        state.questions.forEach((_, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'question-number-btn';
+            btn.textContent = i + 1;
+            btn.dataset.index = i;
+            btn.addEventListener('click', () => showQuestion(i));
+            questionGrid.appendChild(btn);
+        });
+    };
+
+    const updateQuestionGrid = () => {
+        const btns = questionGrid.querySelectorAll('.question-number-btn');
+        btns.forEach((btn) => {
+            const i = parseInt(btn.dataset.index);
+            btn.className = 'question-number-btn';
+            if (i === state.currentIndex) {
+                btn.classList.add('current');
+            }
+            if (state.answers[i] !== undefined) {
+                const q = state.questions[i];
+                const correct = state.answers[i] === (q.correctAnswer - 1);
+                btn.classList.add(correct ? 'correct' : 'wrong');
+            }
+        });
+    };
+
+    /* ============================================================
+       EXAM CONTROLS & NAVIGATION
+       ============================================================ */
+    const goToPrev = () => {
+        if (state.currentIndex > 0) {
+            showQuestion(state.currentIndex - 1);
+        }
+    };
+
+    const goToNext = () => {
+        if (state.currentIndex < state.questions.length - 1) {
+            showQuestion(state.currentIndex + 1);
+        } else {
+            confirmSubmit();
+        }
+    };
+
+    const confirmSubmit = () => {
+        let unanswered = 0;
+        state.questions.forEach((_, i) => {
+            if (state.answers[i] === undefined) unanswered++;
+        });
+
+        const msg = unanswered > 0
+            ? `لديك ${unanswered} سؤال لم تتم الإجابة عليه.\nهل أنت متأكد من إنهاء الاختبار؟`
+            : 'هل أنت متأكد من إنهاء الاختبار؟';
+
+        customConfirm(msg).then((ok) => {
+            if (ok) finishExam();
+        });
+    };
+
+    const finishExam = () => {
+        const earned = state.totalScore;
+        const possible = state.totalPossible;
+        const pct = possible > 0 ? ((earned / possible) * 100) : 0;
+        const pctStr = pct.toFixed(2);
+
+        $('result-earned').textContent = earned.toFixed(2);
+        $('result-possible').textContent = possible.toFixed(2);
+        $('result-percent').textContent = `${pctStr}%`;
+        $('result-subject').textContent = state.subjectName;
+
+        const gradeEl = $('result-grade');
+        const iconEl = $('result-icon');
+        const titleEl = $('result-title');
+        gradeEl.className = 'result-grade';
+
+        if (pct >= 90) {
+            gradeEl.textContent = 'ممتاز';
+            gradeEl.classList.add('grade-excellent');
+            iconEl.textContent = '✓';
+            titleEl.textContent = 'أداء رائع!';
+        } else if (pct >= 75) {
+            gradeEl.textContent = 'جيد جداً';
+            gradeEl.classList.add('grade-good');
+            iconEl.textContent = '✓';
+            titleEl.textContent = 'تم إنهاء الاختبار!';
+        } else if (pct >= 50) {
+            gradeEl.textContent = 'مقبول';
+            gradeEl.classList.add('grade-okay');
+            iconEl.textContent = '✓';
+            titleEl.textContent = 'تم إنهاء الاختبار!';
+        } else {
+            gradeEl.textContent = 'يحتاج إلى مراجعة';
+            gradeEl.classList.add('grade-fail');
+            iconEl.textContent = '⚠';
+            titleEl.textContent = 'تم إنهاء الاختبار!';
+        }
+
+        resultModal.classList.remove('hidden');
+    };
+
+    resultClose.addEventListener('click', () => {
+        resultModal.classList.add('hidden');
+        goBackToSubjects();
     });
 
-    matchingContainer.appendChild(table);
-    optionsContainer.appendChild(matchingContainer);
+    prevBtn.addEventListener('click', goToPrev);
+    nextBtn.addEventListener('click', goToNext);
 
-    // Add a special class to the options container for styling
-    optionsContainer.classList.add('matching-question');
-}
-
-function selectOption(index) {
-    const question = getQuestion(currentQuestionIndex);
-
-    // Handle matching question differently
-    if (question.question.includes('صل بين المصطلحات')) {
-        // Don't do standard option selection for matching questions
-        // The selection is handled in the displayMatchingQuestion function
-        return;
-    }
-
-    // Regular option selection for standard questions
-    answers[currentQuestionIndex] = index;
-    const options = document.querySelectorAll('.option');
-    options.forEach(option => option.classList.remove('selected'));
-    options[index].classList.add('selected');
-    updateQuestionGrid();
-    updateScore();
-    updateStatus();
-}
-
-function navigateToQuestion(index) {
-    currentQuestionIndex = index;
-    displayQuestion();
-}
-
-function updateNavButtons() {
-    if (!prevBtn || !nextBtn) return;
-
-    prevBtn.disabled = currentQuestionIndex === 0;
-    nextBtn.disabled = currentQuestionIndex === getTotalQuestions() - 1;
-}
-
-function updateStatus() {
-    if (!statusIndicator) return;
-
-    const question = getQuestion(currentQuestionIndex);
-    if (!question) return;
-
-    const answer = answers[currentQuestionIndex];
-
-    if (question.question.includes('صل بين المصطلحات')) {
-        // For matching question
-        if (!answer || Object.keys(answer).length === 0) {
-            statusIndicator.textContent = 'لم تتم الإجابة';
-        } else {
-            let allCorrect = true;
-
-            // Check if all matches are correct
-            for (const termIndex in answer) {
-                const defIndex = answer[termIndex];
-                if (parseInt(termIndex) !== defIndex) {
-                    allCorrect = false;
-                    break;
-                }
-            }
-
-            // Check if all terms have a match
-            const expectedTerms = question.options.length;
-            const matchedTerms = Object.keys(answer).length;
-
-            if (allCorrect && expectedTerms === matchedTerms) {
-                statusIndicator.textContent = 'إجابة صحيحة';
-            } else if (matchedTerms < expectedTerms) {
-                statusIndicator.textContent = 'إجابة غير مكتملة';
-            } else {
-                statusIndicator.textContent = 'إجابة خاطئة';
-            }
-        }
-    } else {
-        // Regular question status
-        if (answer === null || answer === undefined) {
-            statusIndicator.textContent = 'لم تتم الإجابة';
-        } else if (answer + 1 === question.correctAnswer) {
-            statusIndicator.textContent = 'إجابة صحيحة';
-        } else {
-            statusIndicator.textContent = 'إجابة خاطئة';
-        }
-    }
-}
-
-function updateScore() {
-    if (!scoreElement) return;
-
-    let currentScore = 0;
-    const maxScore = getMaxScore();
-
-    answers.forEach((answer, index) => {
-        const question = getQuestion(index);
-        if (!question) return;
-
-        if (question.question.includes('صل بين المصطلحات')) {
-            // For matching question
-            if (answer && typeof answer === 'object') {
-                let allCorrect = true;
-
-                // Check if all matches are correct
-                for (const termIndex in answer) {
-                    const defIndex = answer[termIndex];
-                    if (parseInt(termIndex) !== defIndex) {
-                        allCorrect = false;
-                        break;
-                    }
-                }
-
-                // Check if all terms have a match
-                const expectedTerms = question.options.length;
-                const matchedTerms = Object.keys(answer).length;
-
-                if (allCorrect && expectedTerms === matchedTerms) {
-                    currentScore += question.score;
-                }
-            }
-        } else {
-            // Regular question scoring
-            if (answer !== null && answer !== undefined && answer + 1 === question.correctAnswer) {
-                currentScore += question.score;
-            }
-        }
+    document.addEventListener('keydown', (e) => {
+        if (examScreen.classList.contains('hidden')) return;
+        if (e.key === 'ArrowRight') goToNext();
+        if (e.key === 'ArrowLeft') goToPrev();
     });
 
-    score = currentScore;
-    const percentage = (currentScore / maxScore * 100).toFixed(2);
-    scoreElement.textContent = `${currentScore.toFixed(2)} من ${maxScore.toFixed(2)} (${percentage}%)`;
-}
+    /* ============================================================
+       BACK TO DASHBOARD
+       ============================================================ */
+    const goBackToSubjects = () => {
+        examScreen.classList.add('hidden');
+        subjectScreen.classList.remove('hidden');
+        document.body.classList.remove('exam-active');
+        renderSubjects();
+    };
 
-function updateTimer() {
-    if (!timerElement) return;
+    backBtn.addEventListener('click', () => {
+        customConfirm('سيتم فقدان التقدم في الاختبار الحالي. هل أنت متأكد؟').then((ok) => {
+            if (ok) goBackToSubjects();
+        });
+    });
 
-    const now = new Date();
-    const diff = Math.floor((now - startTime) / 1000);
-    const minutes = Math.floor(diff / 60);
-    timerElement.textContent = `${minutes} دقائق`;
-}
+    /* ============================================================
+       HTML SANITIZER HELPERS
+       ============================================================ */
+    const escapeHtml = (str) => {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    };
 
-prevBtn?.addEventListener('click', () => {
-    if (currentQuestionIndex > 0) {
-        currentQuestionIndex--;
-        displayQuestion();
-    }
-});
+    /* ============================================================
+       INIT SYSTEM
+       ============================================================ */
+    initTheme();
+    renderSubjects();
 
-nextBtn?.addEventListener('click', () => {
-    if (currentQuestionIndex < getTotalQuestions() - 1) {
-        currentQuestionIndex++;
-        displayQuestion();
-    }
-});
-
-// Initialize questions from external file
-function loadQuestionsFromExternalFile() {
-    logDebug('Loading questions from external file');
-
-    // Check if questions are already loaded from the external file
-    if (typeof window.questions !== 'undefined' && window.questions.length > 0) {
-        questions = window.questions;
-        logDebug(`Loaded ${questions.length} questions from global scope`);
-        return true;
-    }
-
-    // If not in global scope, try to load via localStorage as fallback
-    const savedQuestions = localStorage.getItem('examQuestions');
-    if (savedQuestions) {
-        try {
-            questions = JSON.parse(savedQuestions);
-            logDebug(`Loaded ${questions.length} questions from localStorage`);
-            return true;
-        } catch (e) {
-            logDebug(`Error parsing questions from localStorage: ${e.message}`);
-        }
-    }
-
-    logDebug('Failed to load questions');
-    return false;
-}
-
-function getQuestion(index) {
-    if (!questions || questions.length === 0) {
-        loadQuestionsFromExternalFile();
-    }
-
-    if (!questions || !questions[index]) {
-        logDebug(`Question not found at index ${index}`);
-        return null;
-    }
-
-    return questions[index];
-}
-
-function getTotalQuestions() {
-    if (!questions || questions.length === 0) {
-        loadQuestionsFromExternalFile();
-    }
-
-    return questions ? questions.length : 0;
-}
-
-function getMaxScore() {
-    if (!questions || questions.length === 0) {
-        loadQuestionsFromExternalFile();
-    }
-
-    return questions ? questions.reduce((total, q) => total + (q.score || 1), 0) : 0;
-}
-
-function initializeExam() {
-    logDebug('Initializing exam');
-
-    // Load questions first
-    if (!loadQuestionsFromExternalFile()) {
-        logDebug('Failed to load questions, displaying error message');
-        if (questionText) {
-            questionText.textContent = "خطأ في تحميل الأسئلة. يرجى تحديث الصفحة.";
-        }
-        return;
-    }
-
-    // Initialize the answers array with the correct length
-    answers = new Array(getTotalQuestions()).fill(null);
-    logDebug(`Initialized answers array with ${answers.length} slots`);
-
-    const now = new Date();
-    if (examDate) {
-        examDate.textContent = now.toLocaleDateString('ar-SA');
-    }
-
-    // Update timer once and then set interval
-    if (timerElement) {
-        timerElement.textContent = "0 دقائق";
-        setInterval(updateTimer, 60000);
-    }
-
-    // Initialize exam UI
-    initializeQuestionGrid();
-    displayQuestion();
-    updateScore();
-
-    // Hide loading indicator
-    if (loadingIndicator) {
-        loadingIndicator.style.display = 'none';
-    }
-
-    logDebug('Exam initialization complete');
-}
-
-// Make sure the DOM is fully loaded before initializing
-document.addEventListener('DOMContentLoaded', initializeExam); 
+})();

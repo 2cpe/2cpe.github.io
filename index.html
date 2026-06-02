@@ -1,61 +1,182 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار الاجهزة الذكية</title>
+    <meta name="description" content="نظام اختبارات تفاعلي حديث لمادة الأجهزة الذكية والمواد الدراسية الأخرى مع ميزة التصحيح التلقائي والدعم الكامل للوضعين الفاتح والمظلم.">
+    <title>الاجهزة الذكية - نظام الامتحانات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="exam-container">
-        <div class="nav-panel">
-            <div class="nav-header">التنقل في الاختبار</div>
-            <div class="question-grid">
+
+    <!-- ===== THEME TOGGLE ===== -->
+    <button id="theme-toggle" class="theme-toggle" aria-label="تبديل الوضع">
+        <span class="toggle-icon sun">&#x2600;</span>
+        <span class="toggle-icon moon">&#x263E;</span>
+    </button>
+
+    <!-- ===== TOAST NOTIFICATION ===== -->
+    <div id="toast" class="toast hidden"></div>
+
+    <!-- ================================ -->
+    <!-- SUBJECT SELECTION SCREEN         -->
+    <!-- ================================ -->
+    <main id="subject-screen" class="subject-screen">
+        <div class="subject-header">
+            <h1>اختر المادة التي تريد اختبارها</h1>
+            <p class="subject-subtitle">جميع المواد متاحة للاختبار، اختر المادة وابدأ الآن</p>
+        </div>
+        <div id="subject-grid" class="subject-grid"></div>
+        <div id="subject-loading" class="subject-loading hidden">
+            <div class="spinner"></div>
+            <span>جاري التحقق من توفر الاختبار...</span>
+        </div>
+        <!-- Skeleton loader shown during initial load -->
+        <div id="skeleton-grid" class="subject-grid skeleton-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
+    </main>
+
+    <!-- ================================ -->
+    <!-- UNAVAILABLE MODAL                 -->
+    <!-- ================================ -->
+    <div id="unavailable-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-icon">⌛</div>
+            <p id="unavailable-message" class="modal-message">عذرا لايوجد اختبار متاح بالوقت الحالي</p>
+            <p class="modal-sub">سيتم إضافة الاختبار قريباً، يرجى المحاولة لاحقاً</p>
+            <button id="modal-close-btn" class="modal-btn">حسناً، فهمت</button>
+        </div>
+    </div>
+
+    <!-- ================================ -->
+    <!-- EXAM RESULT MODAL                 -->
+    <!-- ================================ -->
+    <div id="result-modal" class="modal-overlay hidden">
+        <div class="result-card">
+            <div class="result-icon" id="result-icon">✓</div>
+            <h2 class="result-title" id="result-title">تم إنهاء الاختبار!</h2>
+            <p class="result-subject" id="result-subject">المادة</p>
+
+            <div class="result-stats">
+                <div class="stat-box">
+                    <div class="stat-label">الإجابات الصحيحة</div>
+                    <div class="stat-value">
+                        <span id="result-earned">0.00</span>
+                        <span class="stat-of">من</span>
+                        <span id="result-possible">0.00</span>
+                    </div>
+                </div>
+                <div class="stat-box stat-percent">
+                    <div class="stat-label">النسبة</div>
+                    <div class="stat-value-percent" id="result-percent">0%</div>
+                </div>
+            </div>
+
+            <div class="result-grade" id="result-grade">ممتاز</div>
+
+            <button id="result-close-btn" class="modal-btn">العودة إلى المواد</button>
+        </div>
+    </div>
+
+    <!-- ================================ -->
+    <!-- CONFIRM MODAL                      -->
+    <!-- ================================ -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="confirm-card">
+            <div class="confirm-icon">?</div>
+            <p id="confirm-message" class="confirm-message">هل أنت متأكد؟</p>
+            <div class="confirm-actions">
+                <button id="confirm-no-btn" class="modal-btn modal-btn-secondary">إلغاء</button>
+                <button id="confirm-yes-btn" class="modal-btn">نعم</button>
             </div>
         </div>
-        <div class="main-content">
-            <div class="exam-header">
-                <div class="exam-title">
-                    <h1>الاجهزة الذكية</h1>
-                    <div class="exam-info">
+    </div>
+
+    <!-- ================================ -->
+    <!-- EXAM SCREEN                       -->
+    <!-- ================================ -->
+    <div id="exam-screen" class="exam-screen hidden">
+
+        <!-- Top Bar -->
+        <header class="exam-topbar">
+            <button id="back-to-subjects-btn" class="topbar-back" aria-label="العودة للمواد">
+                <span class="back-arrow">&#x27F5;</span>
+                <span class="back-text">المواد</span>
+            </button>
+            <div class="topbar-center">
+                <span id="exam-subject-display" class="topbar-subject"></span>
+            </div>
+            <div class="topbar-stats">
+                <span id="exam-progress-text" class="topbar-progress">0 / 0</span>
+            </div>
+            <button id="exam-theme-toggle" class="theme-toggle exam-theme-btn" aria-label="تبديل الوضع">
+                <span class="toggle-icon sun">&#x2600;</span>
+                <span class="toggle-icon moon">&#x263E;</span>
+            </button>
+        </header>
+
+        <!-- Progress Bar -->
+        <div class="progress-track">
+            <div id="progress-bar" class="progress-fill"></div>
+        </div>
+
+        <div class="exam-layout">
+            <!-- Side Panel -->
+            <aside class="exam-side">
+                <div class="side-header">التنقل في الاختبار</div>
+                <div id="exam-subject-side" class="side-subject-label"></div>
+                <div class="question-grid" id="exam-question-grid"></div>
+                <div class="side-footer">
+                    <span id="side-score-label">الدرجة:</span>
+                    <span id="side-score" class="side-score">0.00</span>
+                </div>
+            </aside>
+
+            <!-- Question Area -->
+            <div class="exam-main">
+                <div class="exam-header-bar">
+                    <div class="question-number">سؤال <span id="current-question">1</span></div>
+                    <div class="exam-info-row">
                         <div class="info-item">
-                            <span>تاريخ:</span>
+                            <span class="info-label">تاريخ:</span>
                             <span id="exam-date"></span>
                         </div>
                         <div class="info-item">
-                            <span>وقت:</span>
-                            <span id="timer">0 دقائق</span>
-                        </div>
-                        <div class="info-item">
-                            <span>الدرجة:</span>
+                            <span class="info-label">الدرجة:</span>
                             <span id="score">0.00 من 0.00 (0%)</span>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="question-container">
-                <div class="question-number">سؤال <span id="current-question">1</span></div>
-                <div id="question-text" class="question-text"></div>
-                <div id="options-container" class="options-container"></div>
+                <div id="question-container" class="question-container">
+                    <div id="question-text" class="question-text"></div>
+                    <div id="options-container" class="options-container"></div>
+                </div>
+
                 <div class="question-footer">
                     <div class="question-status">
-                        <span id="status-indicator"></span>
+                        <span id="status-indicator">لم تتم الإجابة</span>
                     </div>
                     <div class="question-nav-buttons">
-                        <button id="prev-btn" class="nav-btn">السابق</button>
-                        <button id="next-btn" class="nav-btn">التالي</button>
+                        <button id="prev-btn" class="nav-btn">&#x27F5; السابق</button>
+                        <button id="next-btn" class="nav-btn">التالي &#x27F6;</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <!-- Add a loading indicator -->
-    <div id="loading-indicator" class="loading-indicator">جاري تحميل الأسئلة...</div>
-    
-    <!-- Load scripts with defer attribute to ensure they execute in order after page loads -->
+
     <script src="questions.js" defer></script>
     <script src="app.js" defer></script>
 </body>
-</html> 
+</html>
