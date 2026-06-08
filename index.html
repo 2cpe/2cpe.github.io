@@ -25,9 +25,20 @@
     <!-- SUBJECT SELECTION SCREEN         -->
     <!-- ================================ -->
     <main id="subject-screen" class="subject-screen">
+
+        <!-- Institutional Banner -->
+        <div class="institution-banner">
+            <div class="institution-logo">🎓</div>
+            <div class="institution-info">
+                <div class="institution-title">نظام الامتحانات الإلكترونية</div>
+                <div class="institution-subtitle">قسم الحاسوب والأجهزة الذكية — الفصل الدراسي الثاني</div>
+            </div>
+            <div class="institution-badge">الفرقة الثانية</div>
+        </div>
+
         <div class="subject-header">
-            <h1>اختر المادة التي تريد اختبارها</h1>
-            <p class="subject-subtitle">جميع المواد متاحة للاختبار، اختر المادة وابدأ الآن</p>
+            <h1>اختر المادة الدراسية</h1>
+            <p class="subject-subtitle">اختر المادة للبدء في تقييم ذاتي تفاعلي مع التصحيح الفوري</p>
         </div>
         <div id="subject-grid" class="subject-grid"></div>
         <div id="subject-loading" class="subject-loading hidden">
@@ -170,6 +181,7 @@
                     <div class="question-nav-buttons">
                         <button id="prev-btn" class="nav-btn">&#x27F5; السابق</button>
                         <button id="next-btn" class="nav-btn">التالي &#x27F6;</button>
+                        <button id="submit-btn" class="nav-btn submit-btn hidden">تسليم الاختبار ✓</button>
                     </div>
                 </div>
             </div>

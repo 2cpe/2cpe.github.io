@@ -33,6 +33,7 @@
     const optionsContainer = $('options-container');
     const prevBtn = $('prev-btn');
     const nextBtn = $('next-btn');
+    const submitBtn = $('submit-btn');
     const statusIndicator = $('status-indicator');
     const scoreSpan = $('score');
     const sideScore = $('side-score');
@@ -280,6 +281,10 @@
 
         currentQSpan.textContent = index + 1;
 
+        const isLast = index === state.questions.length - 1;
+        nextBtn.classList.toggle('hidden', isLast);
+        submitBtn.classList.toggle('hidden', !isLast);
+
         renderOptions(q, index);
         updateStatus(index);
         updateQuestionGrid();
@@ -385,8 +390,6 @@
     const goToNext = () => {
         if (state.currentIndex < state.questions.length - 1) {
             showQuestion(state.currentIndex + 1);
-        } else {
-            confirmSubmit();
         }
     };
 
@@ -453,6 +456,7 @@
 
     prevBtn.addEventListener('click', goToPrev);
     nextBtn.addEventListener('click', goToNext);
+    submitBtn.addEventListener('click', confirmSubmit);
 
     document.addEventListener('keydown', (e) => {
         if (examScreen.classList.contains('hidden')) return;
