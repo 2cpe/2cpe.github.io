@@ -215,7 +215,7 @@
                 { question: "هو عبارة عن اي شاشة تراها في تطبيقك:", options: ["Activity", "Intent", "Service", "Content Provider"], correctAnswer: 1, score: 1.00 },
                 { question: "هو المسافة بين محتوى العنصر وحدوده:", options: ["Margin", "Padding", "Orientation", "drawable"], correctAnswer: 2, score: 1.00 },
                 { question: "عند ادراج صورة الى التطبيق فإننا نتعامل مع مجلد:", options: ["drawable", "Values", "XML", "JAVA"], correctAnswer: 1, score: 1.00 },
-                { question: "ينقسم نظام الاندرويد الى ...... طبقات:", options: ["7", "6", "5", "4"], correctAnswer: 3, score: 1.00 },
+                { question: "ينقسم نظام الاندرويد الى ...... طبقات:", options: ["7", "6", "5", "4"], correctAnswer: 4, score: 1.00 },
                 { question: "Android مفتوح المصدر", options: ["صح", "خطأ"], correctAnswer: 1, score: 1.00 },
                 { question: "يعتمد على Linux", options: ["صح", "خطأ"], correctAnswer: 1, score: 1.00 },
                 { question: "لا يمكن تعديله", options: ["صح", "خطأ"], correctAnswer: 2, score: 1.00 },
